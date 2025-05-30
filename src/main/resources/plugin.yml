@@ -1,0 +1,6 @@
+name: PowerGemsExpansionPack
+version: '1.0'
+main: Master.MPG
+api-version: '1.20'
+load: STARTUP
+authors: [ LeonardisG, Iseal ]
