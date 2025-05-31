@@ -1,13 +1,28 @@
 package Master;
 
+import Master.gems.*;
+
+import dev.iseal.powergems.api.ApiManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.logging.Logger;
 
 public final class MPG extends JavaPlugin {
 
+    ApiManager apiManager = new ApiManager();
+    Logger logger = Logger.getLogger("PowerGems");
+
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        apiManager.registerAddonPlugin(this);
+        logger.info("Registered MorePowerGems as an addon plugin for PowerGems.");
 
+        apiManager.registerGemClass(AffluenceGem.class);
+        apiManager.registerGemClass(PoisonGem.class);
+        apiManager.registerGemClass(RuinGem.class);
+        apiManager.registerGemClass(ShulkerGem.class);
+        apiManager.registerGemClass(WitherGem.class);
+        logger.info("Registered MorePowerGems gems");
     }
 
     @Override

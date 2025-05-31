@@ -60,11 +60,11 @@ public class AffluenceGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 0;
+        return 1;
     }
 
     @Override
     public PotionEffectType getDefaultEffectType() {
-        return null;
+        return PotionEffectType.HERO_OF_THE_VILLAGE;
     }
 }

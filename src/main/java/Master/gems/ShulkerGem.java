@@ -25,7 +25,7 @@ public class ShulkerGem extends Gem {
     }
 
     /**
-     * Right-click: Gives player haste 2 for 30 times the level of the gem.
+     *
      * @param player the player who rights-clicked
      * @param level the level of the gem
      */
