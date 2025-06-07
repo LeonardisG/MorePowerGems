@@ -23,15 +23,18 @@ public class PoisonGem extends Gem {
     public PoisonGem() {
         super("Poison");
     }
+
     @Override
     public void call(Action act, Player plr, ItemStack item) {
         caller = this.getClass();
         super.call(act, plr, item);
     }
 
-    /** Applies regeneration to the user player and position to the player he is looking at.
+    /**
+     * Applies regeneration to the user player and position to the player he is looking at.
+     *
      * @param player the player who left-clicked
-     * @param level the level of the gem
+     * @param level  the level of the gem
      */
     @Override
     protected void leftClick(Player player, int level) {
@@ -48,22 +51,22 @@ public class PoisonGem extends Gem {
         Player targetPlayer = null;
         double closestAngle = 0.8; // Approximately 35 degree field of view
 
-        for(Entity entity : nearbyEntities) {
-            if(entity instanceof Player && entity != player) {
+        for (Entity entity : nearbyEntities) {
+            if (entity instanceof Player && entity != player) {
                 Vector playerDirection = player.getEyeLocation().getDirection().normalize();
                 Vector toTarget = entity.getLocation().toVector().subtract(player.getEyeLocation().toVector()).normalize();
 
                 double dot = toTarget.dot(playerDirection);
 
-                if(dot > closestAngle) {
-                    targetPlayer = (Player)entity;
+                if (dot > closestAngle) {
+                    targetPlayer = (Player) entity;
                     closestAngle = dot;
                 }
             }
         }
 
         // Apply poison effect to the targeted player if found
-        if(targetPlayer != null) {
+        if (targetPlayer != null) {
             targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
                     20 * level,// Duration scales with gem level
                     1,
@@ -73,9 +76,11 @@ public class PoisonGem extends Gem {
         }
     }
 
-    /** Shoots a tipped arrow, its 50%-50% chance to be either a poison or instant damage(harming) arrow.
+    /**
+     * Shoots a tipped arrow, its 50%-50% chance to be either a poison or instant damage(harming) arrow.
+     *
      * @param player the player
-     * @param level the level of the gem
+     * @param level  the level of the gem
      */
     @Override
     protected void rightClick(Player player, int level) {
@@ -98,9 +103,11 @@ public class PoisonGem extends Gem {
     }
 
 
-    /** Removes all negative potion effects from the player.
+    /**
+     * Removes all negative potion effects from the player.
+     *
      * @param player the player
-     * @param level the level of the gem
+     * @param level  the level of the gem
      */
     @Override
     protected void shiftClick(Player player, int level) {
@@ -119,7 +126,7 @@ public class PoisonGem extends Gem {
         badEffects.add(PotionEffectType.DARKNESS);
         badEffects.add(PotionEffectType.LEVITATION);
 
-        for(PotionEffectType effectType : badEffects) {
+        for (PotionEffectType effectType : badEffects) {
             if (player.hasPotionEffect(effectType)) {
                 player.removePotionEffect(effectType);
             }
