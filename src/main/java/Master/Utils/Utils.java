@@ -21,7 +21,7 @@ public class Utils {
      * @param plugin  The plugin instance
      * @param player  The player to show the timer to
      * @param seconds The duration of the timer in seconds
-     * @param message The message to display to the player when timer ends
+     * @param message The message to display to the player when the timer ends
      */
     public static void startTimer(Plugin plugin, Player player, int seconds, String message) {
         stopTimer(player); // Stop any existing timer for this player
@@ -36,7 +36,19 @@ public class Utils {
                     player.sendMessage(ChatColor.RED + message);
                     return;
                 }
-                sendActionBar(player, formatTime(timeLeft[0]));
+
+                // Determine color based on time remaining
+                ChatColor timerColor;
+                if (timeLeft[0] > 20) {
+                    timerColor = ChatColor.GREEN;
+                } else if (timeLeft[0] >= 10) {
+                    timerColor = ChatColor.YELLOW;
+                } else {
+                    timerColor = ChatColor.RED;
+                }
+
+                // Display colored timer
+                sendActionBar(player, timerColor + formatTime(timeLeft[0]));
                 timeLeft[0]--; // Decrement the timer
             }
         }.runTaskTimer(plugin, 0L, 20L); // Run every second (20 ticks)

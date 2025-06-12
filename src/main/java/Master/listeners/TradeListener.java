@@ -61,7 +61,6 @@ public class TradeListener implements Listener {
 
                     // Apply the discounted recipes to the merchant
                     merchantInventory.getMerchant().setRecipes(discountedRecipes);
-                    logger.fine("Successfully applied discounts to " + discountedRecipes.size() + " trades");
                 }
             }
         } catch (Exception ex) {

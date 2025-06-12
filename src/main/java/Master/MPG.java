@@ -2,6 +2,8 @@ package Master;
 
 import Master.gems.*;
 
+import Master.listeners.DoubleDropsListener;
+import Master.listeners.TradeListener;
 import dev.iseal.powergems.api.ApiManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,6 +25,9 @@ public final class MPG extends JavaPlugin {
         apiManager.registerGemClass(ShulkerGem.class);
         apiManager.registerGemClass(WitherGem.class);
         logger.info("Registered MorePowerGems gems");
+
+        getServer().getPluginManager().registerEvents(new TradeListener(), this);
+        getServer().getPluginManager().registerEvents(new DoubleDropsListener(), this);
     }
 
     @Override
