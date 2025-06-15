@@ -1,6 +1,6 @@
-package Master.listeners;
+package master.listeners;
 
-import Master.gems.AffluenceGem;
+import master.gems.AffluenceGem;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,7 +23,7 @@ public class DoubleDropsListener implements Listener {
      * @param e The BlockBreakEvent containing information about the broken block
      */
     @EventHandler
-    private void dropEvent(BlockBreakEvent e) {
+    public void dropEvent(BlockBreakEvent e) {
         if (e.getPlayer().hasMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY)) {
             Block block = e.getBlock(); //The original block
             Material blockType = block.getType(); //Its material type
@@ -42,7 +42,7 @@ public class DoubleDropsListener implements Listener {
      * @param e The EntityDeathEvent containing information about the killed entity
      */
     @EventHandler
-    private void killEvent(EntityDeathEvent e) {
+    public void killEvent(EntityDeathEvent e) {
         // Safely check if the entity was killed by a player
         if (e.getEntity().getKiller() != null && e.getEntity().getKiller().hasMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY)) {
             ItemStack[] drops = e.getDrops().toArray(new ItemStack[0]); // Get the original drops

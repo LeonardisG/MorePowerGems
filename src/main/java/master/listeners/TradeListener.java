@@ -1,6 +1,6 @@
-package Master.listeners;
+package master.listeners;
 
-import Master.gems.AffluenceGem;
+import master.gems.AffluenceGem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -40,28 +40,35 @@ public class TradeListener implements Listener {
      *
      * @param e The InventoryOpenEvent that triggered this handler
      */
+    /**
+     * Handles inventory open events to detect when a player opens a villager trading menu.
+     * When detected, it checks if the player has the Affluence Gem discount metadata and
+     * applies a 50% discount to all trades.
+     *
+     * @param e The InventoryOpenEvent that triggered this handler
+     */
     @EventHandler(priority = EventPriority.NORMAL)
-    private void onTradeEvent(InventoryOpenEvent e) {
+    public void onTradeEvent(InventoryOpenEvent e) {
         try {
-            // Check if this is a merchant inventory and if the entity is a player
-            if (e.getInventory() instanceof MerchantInventory merchantInventory && e.getPlayer() instanceof Player player) {
-                // Check if player has the discount metadata from the AffluenceGem
-                if (player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
-                    logger.fine("Applying trade discount for player: " + player.getName());
+            // Check if this is a merchant inventory, the entity is a player, and player has discount metadata
+            if (e.getInventory() instanceof MerchantInventory merchantInventory &&
+                    e.getPlayer() instanceof Player player &&
+                    player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
 
-                    // Get original recipes and create a container for discounted ones
-                    List<MerchantRecipe> recipes = merchantInventory.getMerchant().getRecipes();
-                    List<MerchantRecipe> discountedRecipes = new ArrayList<>();
+                logger.fine("Applying trade discount for player: " + player.getName());
 
-                    // Process each recipe to create a discounted version
-                    for (MerchantRecipe recipe : recipes) {
-                        MerchantRecipe discountedRecipe = createDiscountedRecipe(recipe);
-                        discountedRecipes.add(discountedRecipe);
-                    }
+                // Get original recipes and create a container for discounted ones
+                List<MerchantRecipe> recipes = merchantInventory.getMerchant().getRecipes();
+                List<MerchantRecipe> discountedRecipes = new ArrayList<>();
 
-                    // Apply the discounted recipes to the merchant
-                    merchantInventory.getMerchant().setRecipes(discountedRecipes);
+                // Process each recipe to create a discounted version
+                for (MerchantRecipe recipe : recipes) {
+                    MerchantRecipe discountedRecipe = createDiscountedRecipe(recipe);
+                    discountedRecipes.add(discountedRecipe);
                 }
+
+                // Apply the discounted recipes to the merchant
+                merchantInventory.getMerchant().setRecipes(discountedRecipes);
             }
         } catch (Exception ex) {
             // Log any errors that occur during discount application

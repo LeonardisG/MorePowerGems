@@ -1,4 +1,4 @@
-package Master.gems;
+package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import org.bukkit.ChatColor;
@@ -17,13 +17,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * PoisonGem has the following abilities:
+ * <p>
+ * Left-click: Applies regeneration to the player and poison to players they are looking at.
+ * <p>
+ * Right-click: Shoots a tipped arrow that has a 50% chance of being a poison arrow or an instant damage arrow.
+ * <p>
+ * Shift-click: Removes all negative potion effects from the player.
+ */
 public class PoisonGem extends Gem {
-
+    /**
+     * Constructs the PoisonGem
+     */
     public PoisonGem() {
         super("Poison");
     }
 
+    /**
+     * Processes the player's action
+     *
+     * @param act  the action performed
+     * @param plr  the player using the gem
+     * @param item the gem item
+     */
     @Override
     public void call(Action act, Player plr, ItemStack item) {
         caller = this.getClass();

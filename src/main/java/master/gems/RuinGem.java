@@ -1,9 +1,8 @@
-package Master.gems;
+package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Silverfish;
@@ -11,7 +10,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
@@ -20,20 +18,25 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * RuinGem - A gem that allows players to grapple to blocks and transform the environment.
- * This gem has the power to create ruin and decay in the world.
+ * RuinGem has the following abilities:
+ * <p>
+ * Left-click: Grapples the player towards a target block in their line of sight.
+ * <p>
+ * Right-click: Transforms blocks around the player into moss blocks.
+ * <p>
+ * Shift-click: Spawns a special silverfish that infests blocks it walks over.
  */
 public class RuinGem extends Gem {
 
     /**
-     * Constructs a new RuinGem with the name "Ruin"
+     * Constructs the RuinGem.
      */
     public RuinGem() {
         super("Ruin");
     }
 
     /**
-     * Processes the player's action with this gem
+     * Processes the player's action
      *
      * @param act  the action performed
      * @param plr  the player using the gem

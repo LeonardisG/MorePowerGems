@@ -1,9 +1,9 @@
-package Master;
+package master;
 
-import Master.gems.*;
+import master.gems.*;
 
-import Master.listeners.DoubleDropsListener;
-import Master.listeners.TradeListener;
+import master.listeners.DoubleDropsListener;
+import master.listeners.TradeListener;
 import dev.iseal.powergems.api.ApiManager;
 import org.bukkit.plugin.java.JavaPlugin;
 

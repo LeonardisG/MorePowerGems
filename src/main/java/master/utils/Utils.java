@@ -1,4 +1,4 @@
-package Master.Utils;
+package master.utils;
 
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Utility class for managing countdown timers and displaying them to players.
+ */
 public class Utils {
     private static final Map<UUID, BukkitTask> playerTimers = new HashMap<>();
 
