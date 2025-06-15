@@ -1,6 +1,10 @@
-name: PowerGemsExpansionPack
+name: MorePowerGems
 version: '1.0'
 main: master.MPG
 api-version: '1.20'
-load: STARTUP
-authors: [ LeonardisG, Iseal ]
+load: POSTWORLD
+authors: [LeonardisG, Iseal]
+description: More PowerGems
+depend:
+  - PowerGems
+  - SealLib
