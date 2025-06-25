@@ -56,7 +56,7 @@ public class PoisonGem extends Gem {
     @Override
     protected void leftClick(Player player, int level) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
-                10 * level,
+                200 * level,
                 1,
                 true,
                 false
@@ -149,7 +149,11 @@ public class PoisonGem extends Gem {
             }
         }
     }
-
+    /**
+     * Returns the default lore for the gem.
+     *
+     * @return A list of strings representing the gem's lore
+     */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
@@ -163,12 +167,21 @@ public class PoisonGem extends Gem {
                 "Left click: Apply regeneration to yourself and poison to players you look at.");
         return lore;
     }
-
+    /**
+     * Returns the default effect level for the gem.
+     *
+     * @return The default effect level
+     */
     @Override
     public int getDefaultEffectLevel() {
         return 1;
     }
 
+    /**
+     * Returns the default potion effect type for this gem
+     *
+     * @return the default potion effect type
+     */
     @Override
     public PotionEffectType getDefaultEffectType() {
         return PotionEffectType.REGENERATION;

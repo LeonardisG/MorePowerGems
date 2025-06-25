@@ -29,9 +29,14 @@ public class DoubleDropsListener implements Listener {
             Material blockType = block.getType(); //Its material type
             Location blockLocation = block.getLocation(); //Its location
 
-            e.setDropItems(false); // Prevent default drops
-            ItemStack drop = new ItemStack(blockType, 2); // The original block but doubled
-            block.getWorld().dropItemNaturally(blockLocation, drop);
+            if (blockType.name().endsWith("_ORE") || //Check if the block is an ore
+                    blockType == Material.ANCIENT_DEBRIS) {
+
+                e.setDropItems(false); // Prevent default drops
+                ItemStack drop = new ItemStack(blockType, 2); // The original block but doubled
+                block.getWorld().dropItemNaturally(blockLocation, drop);
+
+            }
         }
     }
 

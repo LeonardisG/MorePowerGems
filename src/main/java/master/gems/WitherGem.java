@@ -1,6 +1,10 @@
 package master.gems;
 
-import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import static dev.iseal.sealLib.SealLib.getPlugin;
+
+import java.util.ArrayList;
+import java.util.Objects;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,11 +15,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.Objects;
+import dev.iseal.powergems.misc.AbstractClasses.Gem;
 
-import static dev.iseal.sealLib.SealLib.getPlugin;
-
+/**
+ * WitherGem has the following abilities:
+ * <p>
+ * Left-click: Launches Wither Skulls at the target.
+ * <p>
+ * Right-click: Applies a temporary damage reduction effect against all attacks and projectiles.
+ * <p>
+ * Shift-click: Creates an explosion at the player's location.
+ */
 public class WitherGem extends Gem {
     /**
      * Metadata key for wither damage reduction effect.
@@ -100,28 +110,42 @@ public class WitherGem extends Gem {
         loc.add(0, 1, 0);
         Objects.requireNonNull(loc.getWorld()).createExplosion(loc, 2.0F + level, true, true, player);
     }
-
+    /**
+     * Returns the default lore for the gem.
+     *
+     * @return A list of strings representing the gem's lore
+     */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.GREEN + "Level %level%");
         lore.add(ChatColor.GREEN + "Abilities");
         lore.add(ChatColor.WHITE
-                + "Right click: .");
+                + "Right click: Reduce damage for 50% against all attacks, and 100% against projectiles");
         lore.add(ChatColor.WHITE
-                + "Shift click: .");
+                + "Shift click: Create explosion and give everyone around you glowing effect");
         lore.add(ChatColor.WHITE
-                + "Left click: .");
+                + "Left click: Launch wither skulls at your target");
         return lore;
     }
 
+    /**
+     * Returns the default effect level for this gem.
+     *
+     * @return the default effect level
+     */
     @Override
     public int getDefaultEffectLevel() {
         return 1;
     }
 
+    /**
+     * Returns the default potion effect type for this gem
+     *
+     * @return the default potion effect type
+     */
     @Override
     public PotionEffectType getDefaultEffectType() {
-        return null;
+        return PotionEffectType.REGENERATION;
     }
 }

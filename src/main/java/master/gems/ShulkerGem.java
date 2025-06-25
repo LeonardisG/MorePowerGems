@@ -134,6 +134,11 @@ public class ShulkerGem extends Gem {
 
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Applied levitation to nearby players!");
     }
+    /**
+     * Returns the default lore for the gem.
+     *
+     * @return A list of strings representing the gem's lore
+     */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
@@ -148,11 +153,21 @@ public class ShulkerGem extends Gem {
         return lore;
     }
 
+    /**
+     * Returns the default effect level for the gem.
+     *
+     * @return The default effect level
+     */
     @Override
     public int getDefaultEffectLevel() {
         return 1;
     }
 
+    /**
+     * Returns the default potion effect type for this gem
+     *
+     * @return the default potion effect type
+     */
     @Override
     public PotionEffectType getDefaultEffectType() {
         return PotionEffectType.JUMP;

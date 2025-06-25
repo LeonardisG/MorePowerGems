@@ -69,7 +69,7 @@ public class RuinGem extends Gem {
      */
     @Override
     protected void rightClick(Player player, int level) {
-        int radius = 10 + (level * 2); // Radius increases with gem level
+        int radius = 5 + (level * 2); // Radius increases with gem level
 
         // Get blocks around player and replace them with moss
         List<Location> blocksAround = getBlocksAroundPlayer(player, radius);
@@ -77,14 +77,14 @@ public class RuinGem extends Gem {
     }
 
     /**
-     * Shift-click: Not implemented yet
+     * Shift-click: Spawns a special silverfish that infests blocks it walks over.
      *
      * @param player the player who shifts-clicked
      * @param level  the level of the gem
      */
     @Override
     protected void shiftClick(Player player, int level) {
-        spawnSpecialSilverFish(player, player.getLocation(), level);
+        spawnSpecialSilverFish(player, player.getLocation(), level, 25);
     }
 
     /**
@@ -123,7 +123,7 @@ public class RuinGem extends Gem {
      */
     @Override
     public PotionEffectType getDefaultEffectType() {
-        return PotionEffectType.SLOW_FALLING;
+        return PotionEffectType.INVISIBILITY;
     }
 
     /**
@@ -151,7 +151,7 @@ public class RuinGem extends Gem {
 
             // Calculate pull vector
             Vector pullVector = hitLoc.toVector().subtract(player.getLocation().toVector());
-            pullVector.normalize().multiply(1.5); // 1.5 is the velocity multiplier
+            pullVector.normalize().multiply(3); // 1.5 is the velocity multiplier
 
             // Apply velocity to player
             player.setVelocity(pullVector);
@@ -189,11 +189,11 @@ public class RuinGem extends Gem {
     }
 
     /**
-     * Gets all blocks around the player
+     * Gets all surface blocks around the player
      *
      * @param player The player to center the search around
      * @param radius The radius to search for blocks
-     * @return A list of locations of blocks within the radius
+     * @return A list of locations of surface blocks within the radius
      */
     private List<Location> getBlocksAroundPlayer(Player player, int radius) {
         List<Location> blocks = new ArrayList<>();
@@ -201,20 +201,21 @@ public class RuinGem extends Gem {
         World world = player.getWorld();
 
         for (int x = -radius; x <= radius; x++) {
-            for (int y = -radius; y <= radius; y++) {
-                for (int z = -radius; z <= radius; z++) {
-                    Location loc = new Location(
-                            world,
-                            playerLocation.getX() + x,
-                            playerLocation.getY() + y,
-                            playerLocation.getZ() + z
-                    );
+            for (int z = -radius; z <= radius; z++) {
+                // Calculate XZ distance for a circular pattern
+                double distance = Math.sqrt(x*x + z*z);
+                if (distance > radius) continue;
 
-                    // Check if within spherical radius
-                    if (playerLocation.distance(loc) <= radius) {
-                        blocks.add(loc);
-                    }
-                }
+                // Get the block coordinates
+                int blockX = playerLocation.getBlockX() + x;
+                int blockZ = playerLocation.getBlockZ() + z;
+
+                // Find the surface
+                int blockY = world.getHighestBlockYAt(blockX, blockZ);
+
+                // Create location at the surface block
+                Location loc = new Location(world, blockX, blockY, blockZ);
+                blocks.add(loc);
             }
         }
 
@@ -222,18 +223,26 @@ public class RuinGem extends Gem {
     }
 
     /**
-     * Replaces blocks with moss blocks
+     * Replaces blocks with moss blocks.
      *
-     * @param player    the player who triggered the replacement
-     * @param locations the list of locations to check and potentially replace
+     * @param player    The player who initiated the action
+     * @param locations The list of locations to replace blocks at
      */
     private void replaceBlocks(Player player, List<Location> locations) {
         World world = player.getWorld();
 
         for (Location loc : locations) {
             Block block = world.getBlockAt(loc);
-            // Only replace non-air blocks to avoid creating blocks in empty space
-            if (!block.getType().isAir()) {
+            if (!block.getType().isAir()
+                    && block.getType() != Material.INFESTED_STONE
+                    && block.getType() != Material.WATER
+                    && block.getType() != Material.END_PORTAL_FRAME
+                    && block.getType() != Material.LAVA
+                    && block.getType() != Material.BEDROCK
+                    && block.getType() != Material.OBSIDIAN
+                    && block.getType() != Material.BARRIER
+                    && block.getType() != Material.END_PORTAL
+                    && block.getType() != Material.ENDER_DRAGON_SPAWN_EGG) {
                 block.setType(Material.MOSS_BLOCK);
             }
         }
@@ -246,10 +255,14 @@ public class RuinGem extends Gem {
      * @param plr The player who spawned the silverfish
      * @param loc The location to spawn the silverfish at
      * @param level The level of the gem affecting silverfish properties
+     * @param limit The maximum number of silverfish that can be spawned in total
      */
-    private void spawnSpecialSilverFish(Player plr, Location loc, int level) {
+    private void spawnSpecialSilverFish(Player plr, Location loc, int level, int limit) {
         Plugin plugin = Bukkit.getPluginManager().getPlugin("MorePowerGems");
         if (plugin == null) return;
+
+        // Check if we've reached the spawn limit
+        if (limit <= 0) return;
 
         // Spawn the silverfish
         Silverfish silverfish = (Silverfish) plr.getWorld().spawnEntity(loc, EntityType.SILVERFISH);
@@ -283,9 +296,23 @@ public class RuinGem extends Gem {
 
                 // Replace block beneath with infested stone
                 Block blockBelow = currentLocation.getBlock().getRelative(0, -1, 0);
-                if (!blockBelow.getType().isAir() && blockBelow.getType() != Material.INFESTED_STONE) {
-                    blockBelow.setType(Material.INFESTED_STONE);
+                Material blockType = blockBelow.getType();
+
+                // List of protected block types that should never be replaced
+                if (blockType.isAir() ||
+                        blockType == Material.INFESTED_STONE ||
+                        blockType == Material.WATER ||
+                        blockType == Material.END_PORTAL_FRAME ||
+                        blockType == Material.LAVA ||
+                        blockType == Material.BEDROCK ||
+                        blockType == Material.OBSIDIAN ||
+                        blockType == Material.BARRIER ||
+                        blockType == Material.END_PORTAL ||
+                        blockType == Material.ENDER_DRAGON_SPAWN_EGG) {
+                    return;
                 }
+
+                blockBelow.setType(Material.INFESTED_STONE);
 
                 // Update last location
                 lastLocation[0] = currentLocation.clone();
@@ -303,11 +330,13 @@ public class RuinGem extends Gem {
                 return;
             }
 
-            // Create a new silverfish at a slightly offset position
-            Location spawnLoc = silverfish.getLocation().clone().add(
-                    (Math.random() * 2) - 1, 0, (Math.random() * 2) - 1);
-            spawnSpecialSilverFish(plr, spawnLoc, level);
-            multiplications[0]++;
+            // Create a new silverfish
+            if (limit > 1) {
+                Location spawnLoc = silverfish.getLocation().clone().add(
+                        (Math.random() * 2) - 1, 0, (Math.random() * 2) - 1);
+                spawnSpecialSilverFish(plr, spawnLoc, level, limit - 1);
+                multiplications[0]++;
+            }
         }, 40, 40); // 40 ticks = 2 seconds
     }
 }

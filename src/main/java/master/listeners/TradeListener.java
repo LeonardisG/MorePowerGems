@@ -4,7 +4,9 @@ import master.gems.AffluenceGem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
@@ -36,21 +38,14 @@ public class TradeListener implements Listener {
     /**
      * Handles inventory open events to detect when a player opens a villager trading menu.
      * When detected, it checks if the player has the Affluence Gem discount metadata and
-     * applies a 50% discount to all trades.
-     *
-     * @param e The InventoryOpenEvent that triggered this handler
-     */
-    /**
-     * Handles inventory open events to detect when a player opens a villager trading menu.
-     * When detected, it checks if the player has the Affluence Gem discount metadata and
-     * applies a 50% discount to all trades.
+     * applies a 50% discount to all trades only for that player.
      *
      * @param e The InventoryOpenEvent that triggered this handler
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onTradeEvent(InventoryOpenEvent e) {
         try {
-            // Check if this is a merchant inventory, the entity is a player, and player has discount metadata
+            // Check if this is a merchant inventory, the entity is a player, and the player has discount metadata
             if (e.getInventory() instanceof MerchantInventory merchantInventory &&
                     e.getPlayer() instanceof Player player &&
                     player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
@@ -69,9 +64,28 @@ public class TradeListener implements Listener {
 
                 // Apply the discounted recipes to the merchant
                 merchantInventory.getMerchant().setRecipes(discountedRecipes);
+
+                getPlugin().getServer().getScheduler().runTaskLater(getPlugin(), () -> {
+                    if (!player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
+                        return;
+                    }
+
+                    // Add event to reset merchant recipes when inventory closes
+                    getPlugin().getServer().getPluginManager().registerEvents(new Listener() {
+                        @EventHandler
+                        public void onInventoryClose(InventoryCloseEvent event) {
+                            if (event.getPlayer().equals(player) &&
+                                    event.getInventory() instanceof MerchantInventory) {
+                                // Reset merchant recipes to original
+                                merchantInventory.getMerchant().setRecipes(recipes);
+                                // Unregister this temporary listener
+                                HandlerList.unregisterAll(this);
+                            }
+                        }
+                    }, getPlugin());
+                }, 1L);
             }
         } catch (Exception ex) {
-            // Log any errors that occur during discount application
             logger.warning("Error applying trade discounts: " + ex.getMessage());
         }
     }
