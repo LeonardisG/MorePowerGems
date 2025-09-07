@@ -1,10 +1,10 @@
 package master;
 
+import dev.iseal.powergems.PowerGems;
+import dev.iseal.powergems.api.ApiManager;
 import master.gems.*;
-
 import master.listeners.DoubleDropsListener;
 import master.listeners.TradeListener;
-import dev.iseal.powergems.api.ApiManager;
 import master.listeners.WitherDamageListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,23 +12,19 @@ import java.util.logging.Logger;
 
 public final class MPG extends JavaPlugin {
 
-    ApiManager apiManager;
-    Logger logger = Logger.getLogger("PowerGems");
-
     @Override
     public void onEnable() {
-        apiManager = new ApiManager();
+        Logger logger = PowerGems.getPlugin().getLogger();
+        ApiManager api = ApiManager.getInstance();
 
-        apiManager.registerAddonPlugin(this);
-        logger.info("Registered MorePowerGems as an addon plugin for PowerGems.");
-
-        apiManager.registerGemClass(AffluenceGem.class);
-        apiManager.registerGemClass(PoisonGem.class);
-        apiManager.registerGemClass(RuinGem.class);
-        apiManager.registerGemClass(ShulkerGem.class);
-        apiManager.registerGemClass(WitherGem.class);
+        api.registerGemClass(AffluenceGem.class, this);
+        api.registerGemClass(PoisonGem.class, this);
+        api.registerGemClass(RuinGem.class, this);
+        api.registerGemClass(ShulkerGem.class, this);
+        api.registerGemClass(WitherGem.class, this);
         logger.info("Registered MorePowerGems gems");
 
+        // Listeners
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new DoubleDropsListener(), this);
         getServer().getPluginManager().registerEvents(new WitherDamageListener(), this);

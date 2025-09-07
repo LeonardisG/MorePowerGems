@@ -2,90 +2,62 @@ package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * PoisonGem has the following abilities:
- * <p>
- * Left-click: Applies regeneration to the player and poison to players they are looking at.
- * <p>
- * Right-click: Shoots a tipped arrow that has a 50% chance of being a poison arrow or an instant damage arrow.
- * <p>
- * Shift-click: Removes all negative potion effects from the player.
- */
+
 public class PoisonGem extends Gem {
-    /**
-     * Constructs the PoisonGem
-     */
-    public PoisonGem() {
-        super("Poison");
-    }
+    public PoisonGem() { super("Poison"); }
 
-    /**
-     * Processes the player's action
-     *
-     * @param act  the action performed
-     * @param plr  the player using the gem
-     * @param item the gem item
-     */
     @Override
     public void call(Action act, Player plr, ItemStack item) {
         caller = this.getClass();
         super.call(act, plr, item);
     }
 
-    /**
-     * Applies regeneration to the user player and position to the player he is looking at.
-     *
-     * @param player the player who left-clicked
-     * @param level  the level of the gem
-     */
+    /** Regen self; poison aimed player in FOV. */
     @Override
     protected void leftClick(Player player, int level) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,
+        player.addPotionEffect(new PotionEffect(
+                PotionEffectType.REGENERATION,
                 200 * level,
                 1,
                 true,
                 false
         ));
-
-        int maxDistance = 15 + (level * 2); // Increase max distance based on gem level
+        int maxDistance = 15 + (level * 2);
         List<Entity> nearbyEntities = player.getNearbyEntities(maxDistance, maxDistance, maxDistance);
-
         Player targetPlayer = null;
-        double closestAngle = 0.8; // Approximately 35 degree field of view
-
+        double closestAngle = 0.8; // ~35 deg
         for (Entity entity : nearbyEntities) {
             if (entity instanceof Player && entity != player) {
                 Vector playerDirection = player.getEyeLocation().getDirection().normalize();
                 Vector toTarget = entity.getLocation().toVector().subtract(player.getEyeLocation().toVector()).normalize();
-
                 double dot = toTarget.dot(playerDirection);
-
                 if (dot > closestAngle) {
                     targetPlayer = (Player) entity;
                     closestAngle = dot;
                 }
             }
         }
-
-        // Apply poison effect to the targeted player if found
         if (targetPlayer != null) {
-            targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
-                    20 * level,// Duration scales with gem level
+            targetPlayer.addPotionEffect(new PotionEffect(
+                    PotionEffectType.POISON,
+                    20 * level,
                     1,
                     true,
                     true
@@ -93,97 +65,72 @@ public class PoisonGem extends Gem {
         }
     }
 
-    /**
-     * Shoots a tipped arrow, its 50%-50% chance to be either a poison or instant damage(harming) arrow.
-     *
-     * @param player the player
-     * @param level  the level of the gem
-     */
+    /** Fires arrow with poison or instant damage effects. */
     @Override
     protected void rightClick(Player player, int level) {
-        Random random = new Random();
-        boolean usePoison = random.nextBoolean(); // If true, use poison; if false, use instant damage
-
+        boolean usePoison = ThreadLocalRandom.current().nextBoolean();
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setPersistent(true);
+        arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
 
-        if (usePoison) {
-            // Poison arrow
-            arrow.setBasePotionData(new PotionData(PotionType.POISON, false, true));
-        } else {
-            // Instant damage arrow
-            arrow.setBasePotionData(new PotionData(PotionType.INSTANT_DAMAGE, false, true));
-        }
+        PotionEffect effect = usePoison ?
+            new PotionEffect(PotionEffectType.POISON, 100, 1, false, true) :
+            new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 1, false, true);
+
+        arrow.addCustomEffect(effect, true);
 
         // Scale velocity with gem level
         arrow.setVelocity(arrow.getVelocity().multiply(1 + (level * 0.1)));
     }
 
-
-    /**
-     * Removes all negative potion effects from the player.
-     *
-     * @param player the player
-     * @param level  the level of the gem
-     */
+    /** Cleanses negative potion effects from self. */
     @Override
     protected void shiftClick(Player player, int level) {
         List<PotionEffectType> badEffects = new ArrayList<>();
         badEffects.add(PotionEffectType.POISON);
-        badEffects.add(PotionEffectType.HARM);
         badEffects.add(PotionEffectType.WITHER);
         badEffects.add(PotionEffectType.BLINDNESS);
-        badEffects.add(PotionEffectType.SLOW);
-        badEffects.add(PotionEffectType.SLOW_DIGGING);
-        badEffects.add(PotionEffectType.CONFUSION);
+        badEffects.add(PotionEffectType.SLOWNESS);
+        badEffects.add(PotionEffectType.MINING_FATIGUE);
+        badEffects.add(PotionEffectType.NAUSEA);
         badEffects.add(PotionEffectType.HUNGER);
         badEffects.add(PotionEffectType.WEAKNESS);
         badEffects.add(PotionEffectType.UNLUCK);
         badEffects.add(PotionEffectType.BAD_OMEN);
         badEffects.add(PotionEffectType.DARKNESS);
         badEffects.add(PotionEffectType.LEVITATION);
-
         for (PotionEffectType effectType : badEffects) {
             if (player.hasPotionEffect(effectType)) {
                 player.removePotionEffect(effectType);
             }
         }
     }
-    /**
-     * Returns the default lore for the gem.
-     *
-     * @return A list of strings representing the gem's lore
-     */
+
+    /** Provides the default lore lines. */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
         lore.add(ChatColor.GREEN + "Level %level%");
         lore.add(ChatColor.GREEN + "Abilities");
-        lore.add(ChatColor.WHITE +
-                "Right click: Shoot a tipped arrow with poison or instant damage.");
-        lore.add(ChatColor.WHITE +
-                "Shift click: Remove all negative potion effects from yourself.");
-        lore.add(ChatColor.WHITE +
-                "Left click: Apply regeneration to yourself and poison to players you look at.");
+        lore.add(ChatColor.WHITE + "Right click: Shoot a tipped arrow with poison or instant damage.");
+        lore.add(ChatColor.WHITE + "Shift click: Remove all negative potion effects from yourself.");
+        lore.add(ChatColor.WHITE + "Left click: Apply regeneration to yourself and poison to players you look at.");
         return lore;
     }
-    /**
-     * Returns the default effect level for the gem.
-     *
-     * @return The default effect level
-     */
+
     @Override
-    public int getDefaultEffectLevel() {
-        return 1;
+    public int getDefaultEffectLevel() { return 1; }
+
+    @Override
+    public PotionEffectType getDefaultEffectType() { return PotionEffectType.REGENERATION; }
+
+    @Override
+    public Particle getDefaultParticle() {
+        return Particle.WITCH;
     }
 
-    /**
-     * Returns the default potion effect type for this gem
-     *
-     * @return the default potion effect type
-     */
     @Override
-    public PotionEffectType getDefaultEffectType() {
-        return PotionEffectType.REGENERATION;
+    public BlockData getParticleBlockData() {
+        return null;
     }
 }

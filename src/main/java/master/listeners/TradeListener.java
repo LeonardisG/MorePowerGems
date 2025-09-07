@@ -1,5 +1,6 @@
 package master.listeners;
 
+import dev.iseal.powergems.PowerGems;
 import master.gems.AffluenceGem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,7 +11,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,22 +25,10 @@ import static dev.iseal.sealLib.SealLib.getPlugin;
  */
 public class TradeListener implements Listener {
 
-    private final Logger logger;
-
-    /**
-     * Constructor that initializes the logger for better error tracking.
-     */
-    public TradeListener() {
-        Plugin plugin = getPlugin();
-        this.logger = plugin.getLogger();
-    }
+    private final Logger logger = PowerGems.getPlugin().getLogger();
 
     /**
      * Handles inventory open events to detect when a player opens a villager trading menu.
-     * When detected, it checks if the player has the Affluence Gem discount metadata and
-     * applies a 50% discount to all trades only for that player.
-     *
-     * @param e The InventoryOpenEvent that triggered this handler
      */
     @EventHandler(priority = EventPriority.NORMAL)
     public void onTradeEvent(InventoryOpenEvent e) {
@@ -50,7 +38,6 @@ public class TradeListener implements Listener {
                     e.getPlayer() instanceof Player player &&
                     player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
 
-                logger.fine("Applying trade discount for player: " + player.getName());
 
                 // Get original recipes and create a container for discounted ones
                 List<MerchantRecipe> recipes = merchantInventory.getMerchant().getRecipes();

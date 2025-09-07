@@ -1,9 +1,9 @@
 name: MorePowerGems
 version: '1.0'
 main: master.MPG
-api-version: '1.20'
+api-version: '1.21'
 load: POSTWORLD
-authors: [LeonardisG, Iseal]
+authors: [LeonardisG]
 description: More PowerGems
 depend:
   - PowerGems
