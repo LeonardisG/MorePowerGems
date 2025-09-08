@@ -3,7 +3,6 @@ package master.gems;
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
@@ -41,7 +40,7 @@ public class AffluenceGem extends Gem {
                 player.removeMetadata(DOUBLE_DROPS_METADATA_KEY, getPlugin());
             }
         }, 400L * level);
-        player.sendMessage("Double drops activated for " + (20 * level) + " seconds!");
+        player.sendMessage(ChatColor.GREEN + "Double drops activated for " + (20 * level) + " seconds!");
     }
 
     /** Grants a haste effect for faster mining. */
@@ -53,6 +52,7 @@ public class AffluenceGem extends Gem {
                 1,
                 true,
                 false));
+        player.sendMessage(ChatColor.GREEN + "Haste activated for " + (30 * level) + " seconds!");
     }
 
     /** Halves villager trade prices temporarily. */
@@ -64,7 +64,7 @@ public class AffluenceGem extends Gem {
                 player.removeMetadata(DISCOUNT_METADATA_KEY, getPlugin());
             }
         }, 1200L * level);
-        player.sendMessage("Trade prices halved for " + (60 * level) + " seconds!");
+        player.sendMessage(ChatColor.GREEN + "Trade prices halved for " + (60 * level) + " seconds!");
     }
 
     @Override

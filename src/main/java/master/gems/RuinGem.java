@@ -11,13 +11,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static dev.iseal.sealLib.SealLib.getPlugin;
 
 
 public class RuinGem extends Gem {
@@ -67,7 +68,7 @@ public class RuinGem extends Gem {
 
     @Override
     public Particle getDefaultParticle() {
-        return null;
+        return Particle.ASH;
     }
 
     @Override
@@ -79,19 +80,24 @@ public class RuinGem extends Gem {
     }
 
     private void grapple(int level, Player player) {
-        if (player == null) return;
-        Vector direction = player.getLocation().getDirection();
-        double maxDistance = 10 * level;
-        Location startLocation = player.getEyeLocation();
-        RayTraceResult result = player.getWorld().rayTraceBlocks(startLocation, direction, maxDistance);
-        if (result != null && result.getHitBlock() != null) {
-            Location hitLoc = result.getHitPosition().toLocation(player.getWorld());
-            drawLaser(startLocation, hitLoc);
-            Vector pullVector = hitLoc.toVector().subtract(player.getLocation().toVector()).normalize().multiply(3);
-            player.setVelocity(pullVector);
+        Block target = player.getTargetBlockExact(12 + level);
+        if (target != null && !target.getType().isAir()) {
+            Location targetLoc = target.getLocation().add(0.5, 0.5, 0.5);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (player.getLocation().distance(targetLoc) < 1.0) {
+                        cancel();
+                        return;
+                    }
+                    Vector direction = targetLoc.toVector().subtract(player.getLocation().toVector()).normalize();
+                    player.setVelocity(direction.multiply(0.4));
+                    drawLaser(player.getLocation().add(0, 1.5, 0), targetLoc);
+                }
+            }.runTaskTimer(getPlugin(), 0L, 1L);
         }
     }
-
     private void drawLaser(Location start, Location end) {
         if (start == null || end == null || !Objects.equals(start.getWorld(), end.getWorld())) return;
         double distance = start.distance(end);
@@ -100,7 +106,7 @@ public class RuinGem extends Gem {
             Vector point = start.toVector().add(direction.clone().multiply(i));
             Location particleLoc = point.toLocation(Objects.requireNonNull(start.getWorld()));
             start.getWorld().spawnParticle(
-                    Particle.ELECTRIC_SPARK,
+                    Particle.DUST,
                     particleLoc,
                     1, 0, 0, 0, 0,
                     new Particle.DustOptions(Color.RED, 1.0f)
@@ -214,4 +220,3 @@ public class RuinGem extends Gem {
         }.runTaskTimer(plugin, 40L, 40L);
     }
 }
-

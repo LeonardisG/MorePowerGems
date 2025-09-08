@@ -20,7 +20,8 @@ import dev.iseal.powergems.misc.AbstractClasses.Gem;
 public class WitherGem extends Gem {
 
     public static final String WITHER_DAMAGE_REDUCTION_KEY = "WITHER_DAMAGE_REDUCTION";
-
+    public static final String WITHER_SKULL_KEY = "WITHER_SKULL";
+    public static final String WITHER_SKULL_LEVEL_KEY = "WITHER_SKULL_LEVEL";
     public WitherGem() {
         super("Wither");
     }
@@ -40,6 +41,9 @@ public class WitherGem extends Gem {
                 WitherSkull witherSkull = player.launchProjectile(WitherSkull.class);
                 witherSkull.setGlowing(true);
                 witherSkull.setShooter(player);
+                witherSkull.setCharged(true);
+                witherSkull.setMetadata(WITHER_SKULL_KEY, new FixedMetadataValue(getPlugin(), true));
+                witherSkull.setMetadata(WITHER_SKULL_LEVEL_KEY, new FixedMetadataValue(getPlugin(), level));
             }, (long) i * delay);
         }
     }

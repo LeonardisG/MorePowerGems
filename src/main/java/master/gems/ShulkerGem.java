@@ -18,7 +18,6 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.Bukkit.createBlockData;
 
 
 public class ShulkerGem extends Gem {

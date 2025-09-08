@@ -2,7 +2,6 @@ package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AbstractArrow;
@@ -35,7 +34,7 @@ public class PoisonGem extends Gem {
         player.addPotionEffect(new PotionEffect(
                 PotionEffectType.REGENERATION,
                 200 * level,
-                1,
+                2,
                 true,
                 false
         ));
@@ -104,6 +103,7 @@ public class PoisonGem extends Gem {
                 player.removePotionEffect(effectType);
             }
         }
+        player.sendMessage(ChatColor.DARK_GREEN + "Removed all negative potion effects!");
     }
 
     /** Provides the default lore lines. */
