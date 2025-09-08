@@ -6,7 +6,7 @@
 
     <groupId>dev.iseal</groupId>
     <artifactId>MorePowerGems</artifactId>
-    <version>1.0.0.0-DEV1</version>
+    <version>1.0.0.0</version>
     <packaging>jar</packaging>
 
     <name>MorePowerGems</name>
