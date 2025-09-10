@@ -1,7 +1,5 @@
 package master.listeners;
 
-import dev.iseal.powergems.managers.GemManager;
-import dev.iseal.powergems.managers.SingletonManager;
 import master.gems.WitherGem;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;
@@ -11,7 +9,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 public class WitherDamageListener implements Listener {
-GemManager gm = SingletonManager.getInstance().gemManager;
     /**
      * Reduces damage taken by players who have Wither Gem protection by 50%.
      */
