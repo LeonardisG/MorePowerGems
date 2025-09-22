@@ -4,6 +4,7 @@ import dev.iseal.powergems.api.ApiManager;
 import dev.iseal.sealLib.Updater.UpdateChecker;
 import master.gems.*;
 import master.listeners.DoubleDropsListener;
+import master.listeners.PlayerLeaveEvent;
 import master.listeners.TradeListener;
 import master.listeners.WitherDamageListener;
 import org.bukkit.ChatColor;
@@ -42,6 +43,7 @@ public final class MPG extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new TradeListener(), this);
         getServer().getPluginManager().registerEvents(new DoubleDropsListener(), this);
         getServer().getPluginManager().registerEvents(new WitherDamageListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeaveEvent(), this);
         logger.info("Registered MorePowerGems listeners");
     }
 
