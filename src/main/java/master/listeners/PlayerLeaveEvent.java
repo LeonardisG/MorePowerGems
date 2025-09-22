@@ -10,7 +10,7 @@ import static dev.iseal.sealLib.SealLib.getPlugin;
 
 public class PlayerLeaveEvent implements Listener {
 
-    Plugin plugin = getPlugin();
+    final Plugin plugin = getPlugin();
     /**
      * Cleans player data when they leave the server.
      * This is meant so that metadata doesn't break things when they rejoin.
