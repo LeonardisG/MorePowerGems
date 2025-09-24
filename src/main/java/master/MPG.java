@@ -7,13 +7,11 @@ import master.listeners.DoubleDropsListener;
 import master.listeners.PlayerLeaveEvent;
 import master.listeners.TradeListener;
 import master.listeners.WitherDamageListener;
-import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
 public final class MPG extends JavaPlugin {
-
     @Override
     public void onEnable() {
         Logger logger = getLogger();
@@ -25,10 +23,6 @@ public final class MPG extends JavaPlugin {
                 864000, // 12 hours
                 ex -> getLogger().warning("Update check failed: " + ex.getMessage()),
                 (newVersion, sender) -> {
-                    String oldVersion = getDescription().getVersion();
-                    getLogger().info(
-                            ChatColor.GREEN + "New version available: " + oldVersion + " -> " + newVersion
-                    );
                 }
         );
 
@@ -49,6 +43,5 @@ public final class MPG extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
     }
 }

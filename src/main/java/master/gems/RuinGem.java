@@ -13,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +21,11 @@ import java.util.Objects;
 
 import static dev.iseal.sealLib.SealLib.getPlugin;
 
-
 public class RuinGem extends Gem {
 
-    public RuinGem() { super("Ruin"); }
+    public RuinGem() {
+        super("Ruin");
+    }
 
     @Override
     public void call(Action act, Player plr, ItemStack item) {
@@ -31,11 +33,17 @@ public class RuinGem extends Gem {
         super.call(act, plr, item);
     }
 
-    /** Grapples to blocks in line of sight. */
+    /**
+     * Grapples to blocks in line of sight.
+     */
     @Override
-    protected void leftClick(Player player, int level) { grapple(level, player); }
+    protected void leftClick(Player player, int level) {
+        grapple(level, player);
+    }
 
-    /** Transforms surrounding blocks into moss. */
+    /**
+     * Transforms surrounding blocks into moss.
+     */
     @Override
     protected void rightClick(Player player, int level) {
         int radius = 5 + (level * 2);
@@ -43,12 +51,14 @@ public class RuinGem extends Gem {
         replaceBlocks(player, blocksAround);
     }
 
-    /** Creates an infestation of silverfish that spread and infest blocks. */
+    /**
+     * Creates an infestation of silverfish that spread and infest blocks.
+     */
     @Override
     protected void shiftClick(Player player, int level) {
         int[] totalSpawned = {0};
         int maxTotal = Math.min(10 + (level * 10), 75);
-        int depth = 25;
+        int depth = 10;
         spawnSpecialSilverFish(player, player.getLocation(), level, depth, totalSpawned, maxTotal);
     }
 
@@ -64,7 +74,9 @@ public class RuinGem extends Gem {
     }
 
     @Override
-    public int getDefaultEffectLevel() { return 1; }
+    public int getDefaultEffectLevel() {
+        return 1;
+    }
 
     @Override
     public Particle getDefaultParticle() {
@@ -72,7 +84,9 @@ public class RuinGem extends Gem {
     }
 
     @Override
-    public PotionEffectType getDefaultEffectType() { return PotionEffectType.INVISIBILITY; }
+    public PotionEffectType getDefaultEffectType() {
+        return PotionEffectType.INVISIBILITY;
+    }
 
     @Override
     public BlockData getParticleBlockData() {
@@ -87,7 +101,7 @@ public class RuinGem extends Gem {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (player.getLocation().distance(targetLoc) < 1.0) {
+                    if (player.getLocation().distance(targetLoc) < 1.0 || player.isDead() || !player.isOnline()) {
                         cancel();
                         return;
                     }
@@ -98,13 +112,18 @@ public class RuinGem extends Gem {
             }.runTaskTimer(getPlugin(), 0L, 1L);
         }
     }
+
     private void drawLaser(Location start, Location end) {
-        if (start == null || end == null || !Objects.equals(start.getWorld(), end.getWorld())) return;
+        if (start == null || end == null || start.getWorld() == null || end.getWorld() == null ||
+                !Objects.equals(start.getWorld(), end.getWorld())) return;
+
         double distance = start.distance(end);
+        if (distance > 50) return;
+
         Vector direction = end.toVector().subtract(start.toVector()).normalize();
-        for (double i = 0; i < distance; i += 0.5) {
+        for (double i = 0; i < distance; i += 1.0) {
             Vector point = start.toVector().add(direction.clone().multiply(i));
-            Location particleLoc = point.toLocation(Objects.requireNonNull(start.getWorld()));
+            Location particleLoc = point.toLocation(start.getWorld());
             start.getWorld().spawnParticle(
                     Particle.DUST,
                     particleLoc,
@@ -118,6 +137,7 @@ public class RuinGem extends Gem {
         List<Location> blocks = new ArrayList<>();
         Location playerLocation = player.getLocation();
         World world = player.getWorld();
+
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
                 double distance = Math.sqrt(x * x + z * z);
@@ -133,47 +153,52 @@ public class RuinGem extends Gem {
 
     private void replaceBlocks(Player player, List<Location> locations) {
         World world = player.getWorld();
+
         for (Location loc : locations) {
             Block block = world.getBlockAt(loc);
             Material type = block.getType();
             if (!type.isAir() && type != Material.INFESTED_STONE && type != Material.WATER && type != Material.END_PORTAL_FRAME &&
-                type != Material.LAVA && type != Material.BEDROCK && type != Material.OBSIDIAN && type != Material.BARRIER &&
-                type != Material.END_PORTAL && type != Material.ENDER_DRAGON_SPAWN_EGG) {
+                    type != Material.LAVA && type != Material.BEDROCK && type != Material.OBSIDIAN && type != Material.BARRIER &&
+                    type != Material.END_PORTAL && type != Material.ENDER_DRAGON_SPAWN_EGG) {
                 block.setType(Material.MOSS_BLOCK);
             }
         }
     }
 
     private void spawnSpecialSilverFish(Player plr, Location loc, int level, int remainingDepth, int[] totalSpawned, int maxTotal) {
-        Plugin plugin = Bukkit.getPluginManager().getPlugin("MorePowerGems");
-        if (plugin == null) return;
-        if (remainingDepth <= 0) return;
-        if (totalSpawned[0] >= maxTotal) return;
+        Plugin plugin = getPlugin();
+        if (plugin == null || plr == null || loc == null || loc.getWorld() == null) return;
+        if (remainingDepth <= 0 || totalSpawned[0] >= maxTotal) return;
 
         Silverfish silverfish = (Silverfish) plr.getWorld().spawnEntity(loc, EntityType.SILVERFISH);
         totalSpawned[0]++;
         silverfish.setCustomName("Ruin Silverfish");
         silverfish.setCustomNameVisible(false);
 
+        List<BukkitTask> tasks = new ArrayList<>();
+
         // Auto remove after lifetime
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (silverfish.isValid()) silverfish.remove();
-        }, 400);
+        BukkitTask removeTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (silverfish.isValid()) {
+                silverfish.remove();
+            }
+        }, 400L);
+        tasks.add(removeTask);
 
         final Location[] lastLocation = {silverfish.getLocation().clone()};
 
         // Block infesting task
-        new BukkitRunnable() {
+        BukkitTask infestTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!silverfish.isValid()) {
+                if (!silverfish.isValid() || !plr.isOnline() || plr.isDead()) {
                     cancel();
                     return;
                 }
                 Location currentLocation = silverfish.getLocation();
                 if (lastLocation[0].getBlockX() != currentLocation.getBlockX() ||
-                    lastLocation[0].getBlockY() != currentLocation.getBlockY() ||
-                    lastLocation[0].getBlockZ() != currentLocation.getBlockZ()) {
+                        lastLocation[0].getBlockY() != currentLocation.getBlockY() ||
+                        lastLocation[0].getBlockZ() != currentLocation.getBlockZ()) {
                     Block blockBelow = currentLocation.getBlock().getRelative(0, -1, 0);
                     Material blockType = blockBelow.getType();
                     if (!blockType.isAir() && blockType.isSolid() &&
@@ -188,27 +213,20 @@ public class RuinGem extends Gem {
                 }
             }
         }.runTaskTimer(plugin, 0L, 5L);
+        tasks.add(infestTask);
 
         // Reproduction control per silverfish
         final int[] childrenSpawned = {0};
         int maxChildrenForThis = Math.min(level + 2, 8);
 
-        new BukkitRunnable() {
+        BukkitTask reproductionTask = new BukkitRunnable() {
             @Override
             public void run() {
-                if (!silverfish.isValid()) {
+                if (!plr.isOnline() || plr.isDead() || !silverfish.isValid()) {
                     cancel();
                     return;
                 }
-                if (childrenSpawned[0] >= maxChildrenForThis) {
-                    cancel();
-                    return;
-                }
-                if (totalSpawned[0] >= maxTotal) {
-                    cancel();
-                    return;
-                }
-                if (remainingDepth - 1 <= 0) {
+                if (childrenSpawned[0] >= maxChildrenForThis || totalSpawned[0] >= maxTotal || remainingDepth - 1 <= 0) {
                     cancel();
                     return;
                 }
@@ -218,5 +236,20 @@ public class RuinGem extends Gem {
                 childrenSpawned[0]++;
             }
         }.runTaskTimer(plugin, 40L, 40L);
+        tasks.add(reproductionTask);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!silverfish.isValid()) {
+                    for (BukkitTask task : tasks) {
+                        if (task != null && !task.isCancelled()) {
+                            task.cancel();
+                        }
+                    }
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
     }
 }
