@@ -110,8 +110,8 @@ public class PoisonGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GREEN + "Level %level%");
-        lore.add(ChatColor.GREEN + "Abilities");
+        lore.add(ChatColor.DARK_GREEN + "Level %level%");
+        lore.add(ChatColor.DARK_GREEN + "Abilities");
         lore.add(ChatColor.WHITE + "Right click: Shoot a tipped arrow with poison or instant damage.");
         lore.add(ChatColor.WHITE + "Shift click: Remove all negative potion effects from yourself.");
         lore.add(ChatColor.WHITE + "Left click: Apply regeneration to yourself and poison to players you look at.");

@@ -84,14 +84,22 @@ public class ShulkerGem extends Gem {
         int distance = 5 + (level * 2);
         targetLocation.add(direction.multiply(distance));
 
-        // Find safe ground level - go down to find solid ground
-        while (targetLocation.getY() > 0 &&
-               targetLocation.getBlock().getType() == Material.AIR) {
-            targetLocation.subtract(0, 1, 0);
-        }
-        targetLocation.add(0, 1, 0); // Stand on top of solid block
+        int maxSearchDown = 10;
+        int searchCount = 0;
 
-        // Ensure location is safe (air block to stand in and air above head)
+        if (targetLocation.getBlock().getType().isSolid()) {
+            targetLocation.add(0, 2, 0);
+        }
+
+        while (searchCount < maxSearchDown && targetLocation.getY() > targetLocation.getWorld().getMinHeight()) {
+            if (targetLocation.getBlock().getType().isSolid()) {
+                targetLocation.add(0, 1, 0);
+                break;
+            }
+            targetLocation.subtract(0, 1, 0);
+            searchCount++;
+        }
+
         if (targetLocation.getBlock().getType() == Material.AIR &&
             targetLocation.clone().add(0, 1, 0).getBlock().getType() == Material.AIR &&
             targetLocation.clone().subtract(0, 1, 0).getBlock().getType().isSolid()) {
@@ -110,12 +118,11 @@ public class ShulkerGem extends Gem {
         }
     }
 
-    /** Provides the default lore lines. */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GREEN + "Level %level%");
-        lore.add(ChatColor.GREEN + "Abilities");
+        lore.add(ChatColor.LIGHT_PURPLE + "Level %level%");
+        lore.add(ChatColor.LIGHT_PURPLE + "Abilities");
         lore.add(ChatColor.WHITE + "Left click: Apply levitation to nearby players");
         lore.add(ChatColor.WHITE + "Right click: Shoot shulker bullets");
         lore.add(ChatColor.WHITE + "Shift click: Teleport forward");

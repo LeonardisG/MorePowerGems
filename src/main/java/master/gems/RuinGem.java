@@ -65,8 +65,8 @@ public class RuinGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GREEN + "Level %level%");
-        lore.add(ChatColor.GREEN + "Abilities");
+        lore.add(ChatColor.GRAY + "Level %level%");
+        lore.add(ChatColor.GRAY + "Abilities");
         lore.add(ChatColor.WHITE + "Right click: Transform surrounding blocks into moss.");
         lore.add(ChatColor.WHITE + "Shift click: Makes an infestation of silverfish that spread and infest blocks.");
         lore.add(ChatColor.WHITE + "Left click: Grapple to blocks in your line of sight.");
@@ -93,15 +93,18 @@ public class RuinGem extends Gem {
         return null;
     }
 
+    /** Pulls player towards targeted block using grappling hook. */
     private void grapple(int level, Player player) {
         Block target = player.getTargetBlockExact(12 + level);
         if (target != null && !target.getType().isAir()) {
             Location targetLoc = target.getLocation().add(0.5, 0.5, 0.5);
 
             new BukkitRunnable() {
+                int ticks = 0;
+                final int maxTicks = 100;
                 @Override
                 public void run() {
-                    if (player.getLocation().distance(targetLoc) < 1.0 || player.isDead() || !player.isOnline()) {
+                    if (player.getLocation().distance(targetLoc) < 1.5 || player.isDead() || !player.isOnline() || ticks++ >= maxTicks) {
                         cancel();
                         return;
                     }
@@ -113,6 +116,7 @@ public class RuinGem extends Gem {
         }
     }
 
+    /** Draws a visual laser beam between two locations. */
     private void drawLaser(Location start, Location end) {
         if (start == null || end == null || start.getWorld() == null || end.getWorld() == null ||
                 !Objects.equals(start.getWorld(), end.getWorld())) return;
@@ -133,6 +137,7 @@ public class RuinGem extends Gem {
         }
     }
 
+    /** Gets all blocks around player within radius. */
     private List<Location> getBlocksAroundPlayer(Player player, int radius) {
         List<Location> blocks = new ArrayList<>();
         Location playerLocation = player.getLocation();
@@ -151,6 +156,7 @@ public class RuinGem extends Gem {
         return blocks;
     }
 
+    /** Replaces blocks with moss blocks in given locations. */
     private void replaceBlocks(Player player, List<Location> locations) {
         World world = player.getWorld();
 
@@ -165,6 +171,7 @@ public class RuinGem extends Gem {
         }
     }
 
+    /** Spawns a silverfish that infests blocks and reproduces. */
     private void spawnSpecialSilverFish(Player plr, Location loc, int level, int remainingDepth, int[] totalSpawned, int maxTotal) {
         Plugin plugin = getPlugin();
         if (plugin == null || plr == null || loc == null || loc.getWorld() == null) return;

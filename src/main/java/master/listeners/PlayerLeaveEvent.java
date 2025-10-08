@@ -22,5 +22,6 @@ public class PlayerLeaveEvent implements Listener {
         e.getPlayer().removeMetadata(WitherGem.WITHER_DAMAGE_REDUCTION_KEY, plugin);
         e.getPlayer().removeMetadata(WitherGem.WITHER_SKULL_KEY, plugin);
         e.getPlayer().removeMetadata(WitherGem.WITHER_SKULL_LEVEL_KEY, plugin);
+        e.getPlayer().removeMetadata(AmethystGem.TRAP_METADATA, plugin);
     }
 }

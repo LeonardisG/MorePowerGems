@@ -78,8 +78,8 @@ public class WitherGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GREEN + "Level %level%");
-        lore.add(ChatColor.GREEN + "Abilities");
+        lore.add(ChatColor.DARK_GRAY + "Level %level%");
+        lore.add(ChatColor.DARK_GRAY + "Abilities");
         lore.add(ChatColor.WHITE
                 + "Right click: Reduce damage for 50% against all attacks, and 100% against projectiles");
         lore.add(ChatColor.WHITE
