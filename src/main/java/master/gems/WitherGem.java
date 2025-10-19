@@ -99,7 +99,7 @@ public class WitherGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 0;
+        return 1;
     }
 
     @Override

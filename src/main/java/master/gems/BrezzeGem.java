@@ -77,12 +77,12 @@ public class BrezzeGem extends Gem {
 
     @Override
     public PotionEffectType getDefaultEffectType() {
-        return null;
+        return PotionEffectType.LUCK;
     }
 
     @Override
     public int getDefaultEffectLevel() {
-        return 0;
+        return 1;
     }
 
     @Override

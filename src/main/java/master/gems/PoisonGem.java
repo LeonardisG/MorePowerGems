@@ -128,7 +128,9 @@ public class PoisonGem extends Gem {
     }
 
     @Override
-    public int getDefaultEffectLevel() { return 0; }
+    public int getDefaultEffectLevel() {
+        return 1;
+    }
 
     @Override
     public Particle getDefaultParticle() {
