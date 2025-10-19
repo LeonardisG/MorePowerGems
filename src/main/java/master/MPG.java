@@ -1,6 +1,8 @@
 package master;
 
 import dev.iseal.powergems.api.ApiManager;
+import dev.iseal.powergems.managers.Configuration.GeneralConfigManager;
+import dev.iseal.powergems.managers.SingletonManager;
 import dev.iseal.sealLib.Updater.UpdateChecker;
 import master.gems.*;
 import master.listeners.*;
@@ -10,8 +12,14 @@ import java.util.logging.Logger;
 
 
 public final class MPG extends JavaPlugin {
+    public static boolean PassiveLoreEnabled = true;
+
     @Override
     public void onEnable() {
+        SingletonManager sm = SingletonManager.getInstance();
+        GeneralConfigManager configManager = sm.configManager.getRegisteredConfigInstance(GeneralConfigManager.class);
+        PassiveLoreEnabled = configManager.giveGemPermanentEffectOnLvlX();
+
         Logger logger = getLogger();
         Keys.init(this);
         ApiManager api = ApiManager.getInstance();
@@ -26,15 +34,15 @@ public final class MPG extends JavaPlugin {
         );
 
         api.registerGemClass(AffluenceGem.class, this);
+        api.registerGemClass(AmethystGem.class, this);
+        api.registerGemClass(BrezzeGem.class, this);
+        api.registerGemClass(EnderGem.class, this);
+        api.registerGemClass(MagicGem.class, this);
+        api.registerGemClass(MechGem.class, this);
         api.registerGemClass(PoisonGem.class, this);
         api.registerGemClass(RuinGem.class, this);
         api.registerGemClass(ShulkerGem.class, this);
         api.registerGemClass(WitherGem.class, this);
-        api.registerGemClass(AmethystGem.class, this);
-        api.registerGemClass(EnderGem.class, this);
-        api.registerGemClass(BrezzeGem.class, this);
-        api.registerGemClass(MagicGem.class, this);
-        api.registerGemClass(MechGem.class, this);
         logger.info("Registered MorePowerGems gems");
 
         // Listeners

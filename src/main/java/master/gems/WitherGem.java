@@ -1,11 +1,15 @@
 package master.gems;
 
+import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
+
 import static dev.iseal.sealLib.SealLib.getPlugin;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 import org.bukkit.*;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;
@@ -13,8 +17,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
-
-import dev.iseal.powergems.misc.AbstractClasses.Gem;
 
 
 public class WitherGem extends Gem {
@@ -86,17 +88,18 @@ public class WitherGem extends Gem {
                 + "Shift click: Create explosion and give everyone around you glowing effect");
         lore.add(ChatColor.WHITE
                 + "Left click: Launch wither skulls at your target");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Regeneration");}
         return lore;
-    }
-
-    @Override
-    public int getDefaultEffectLevel() {
-        return 1;
     }
 
     @Override
     public PotionEffectType getDefaultEffectType() {
         return PotionEffectType.REGENERATION;
+    }
+
+    @Override
+    public int getDefaultEffectLevel() {
+        return 0;
     }
 
     @Override

@@ -1,18 +1,23 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static dev.iseal.sealLib.SealLib.getPlugin;
 
@@ -34,6 +39,7 @@ public class MechGem extends Gem {
     protected void leftClick(Player player, int level) {
         int radius = 2;
         Location castLocation = player.getLocation().clone();
+        HashMap<Location, Material> originalBlocks = new HashMap<>();
 
         for(int x = -radius; x <= radius; x++) {
             for(int y = -radius; y <= radius; y++) {
@@ -51,23 +57,22 @@ public class MechGem extends Gem {
                     }
                     if (block.isLiquid()) continue;
 
+                    originalBlocks.put(block.getLocation(), block.getType());
                     block.setType(Material.LAVA);
+
+                    Levelled lava = (Levelled) block.getBlockData();
+                    lava.setLevel(lava.getMaximumLevel());
+                    block.setBlockData(lava);
                 }
             }
         }
 
-        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            for(int x = -radius; x <= radius; x++) {
-                for(int y = -radius; y <= radius; y++) {
-                    for(int z = -radius; z <= radius; z++) {
-                        Block block = castLocation.clone().add(x, y, z).getBlock();
-                        if (block.getType() == Material.LAVA) {
-                            block.setType(Material.AIR);
-                        }
-                    }
-                }
+        Bukkit.getScheduler().runTaskLater(getPlugin(), () -> originalBlocks.forEach((location, material) -> {
+            Block block = location.getBlock();
+            if (block.getType() == Material.LAVA) {
+                block.setType(material);
             }
-        }, 200L + (20L * level));
+        }), 200L + (20L * level));
     }
 
     // Creates a temporary magma block box around the player
@@ -160,6 +165,7 @@ public class MechGem extends Gem {
         lore.add(ChatColor.WHITE + "Right Click: Create an explosion");
         lore.add(ChatColor.WHITE + "Left Click: Place temporary lava around you");
         lore.add(ChatColor.WHITE + "Shift Click: Create a protective magma box");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Fire Resistance");}
         return lore;
     }
 

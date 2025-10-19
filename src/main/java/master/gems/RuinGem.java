@@ -1,7 +1,9 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.*;
+import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EntityType;
@@ -70,22 +72,23 @@ public class RuinGem extends Gem {
         lore.add(ChatColor.WHITE + "Right click: Transform surrounding blocks into moss.");
         lore.add(ChatColor.WHITE + "Shift click: Makes an infestation of silverfish that spread and infest blocks.");
         lore.add(ChatColor.WHITE + "Left click: Grapple to blocks in your line of sight.");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Jump boost.");}
         return lore;
     }
 
     @Override
+    public PotionEffectType getDefaultEffectType() {
+        return PotionEffectType.JUMP_BOOST;
+    }
+
+    @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override
     public Particle getDefaultParticle() {
         return Particle.ASH;
-    }
-
-    @Override
-    public PotionEffectType getDefaultEffectType() {
-        return PotionEffectType.INVISIBILITY;
     }
 
     @Override

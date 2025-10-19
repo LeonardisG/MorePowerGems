@@ -1,10 +1,13 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -126,17 +129,18 @@ public class ShulkerGem extends Gem {
         lore.add(ChatColor.WHITE + "Left click: Apply levitation to nearby players");
         lore.add(ChatColor.WHITE + "Right click: Shoot shulker bullets");
         lore.add(ChatColor.WHITE + "Shift click: Teleport forward");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Resistance");}
         return lore;
     }
 
     @Override
-    public int getDefaultEffectLevel() {
-        return 1;
+    public PotionEffectType getDefaultEffectType() {
+        return PotionEffectType.RESISTANCE;
     }
 
     @Override
-    public PotionEffectType getDefaultEffectType() {
-        return PotionEffectType.LEVITATION;
+    public int getDefaultEffectLevel() {
+        return 0;
     }
 
     @Override

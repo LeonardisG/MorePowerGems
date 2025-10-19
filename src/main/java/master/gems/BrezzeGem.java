@@ -1,6 +1,7 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -70,6 +71,7 @@ public class BrezzeGem extends Gem {
         lore.add(ChatColor.WHITE + "Left-Click: Dash Forward");
         lore.add(ChatColor.WHITE + "Right-Click: Launch Wind Charges");
         lore.add(ChatColor.WHITE + "Shift-Click: Summon Breezes");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: No fall damage");}
         return lore;
     }
 
@@ -85,7 +87,7 @@ public class BrezzeGem extends Gem {
 
     @Override
     public Particle getDefaultParticle() {
-        return null;
+        return Particle.CLOUD;
     }
 
     @Override

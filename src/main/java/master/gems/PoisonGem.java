@@ -1,8 +1,11 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.Arrow;
@@ -115,14 +118,17 @@ public class PoisonGem extends Gem {
         lore.add(ChatColor.WHITE + "Right click: Shoot a tipped arrow with poison or instant damage.");
         lore.add(ChatColor.WHITE + "Shift click: Remove all negative potion effects from yourself.");
         lore.add(ChatColor.WHITE + "Left click: Apply regeneration to yourself and poison to players you look at.");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Regeneration");}
         return lore;
     }
 
     @Override
-    public int getDefaultEffectLevel() { return 1; }
+    public PotionEffectType getDefaultEffectType() {
+        return PotionEffectType.REGENERATION;
+    }
 
     @Override
-    public PotionEffectType getDefaultEffectType() { return PotionEffectType.REGENERATION; }
+    public int getDefaultEffectLevel() { return 0; }
 
     @Override
     public Particle getDefaultParticle() {

@@ -1,18 +1,24 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EvokerFangs;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vex;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 
@@ -24,6 +30,8 @@ public class MagicGem extends Gem {
         super("Magic");
     }
 
+    public static String Fly_Metadata_Key = "MAGIC_FLY";
+
     @Override
     public void call(Action act, Player plr, ItemStack item) {
         caller = this.getClass();
@@ -34,27 +42,38 @@ public class MagicGem extends Gem {
     @Override
     protected void rightClick(Player player, int level) {
         Location spawnLocation = player.getLocation();
+        Vector direction = spawnLocation.getDirection().normalize();
+        int numFangs =5 + level;
+        for (int i = 0; i < numFangs; i++) {
+            Location loc = spawnLocation.clone().add(direction.clone().multiply(i * 0.8));
+
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+                player.getWorld().spawn(loc, EvokerFangs.class, evokerFangs -> evokerFangs.setOwner(player));
+            }, i * 2L);
+
+        }
+
         player.getWorld().spawn(spawnLocation, EvokerFangs.class, evokerFangs -> evokerFangs.setOwner(player));
     }
 
     /** Grants temporary flight ability. */
     @Override
     protected void leftClick(Player player, int level) {
-        boolean couldFly = player.getAllowFlight();
+        int durationTicks = 20 * (10 + Math.min(level, 3) * 2); // 10s base, +2s per level, max 16s at level 3
 
-        player.setFlying(true);
-        player.setAllowFlight(true);
+        player.setMetadata(Fly_Metadata_Key, new FixedMetadataValue(getPlugin(), true));
+        player.addPotionEffect(new PotionEffect(
+                PotionEffectType.LEVITATION,
+                durationTicks,
+                0,
+                false,
+                false
+        ));
 
         Bukkit.getScheduler().runTaskLater(
                 getPlugin(),
-                () -> {
-                    if (player.getGameMode() != org.bukkit.GameMode.CREATIVE &&
-                        player.getGameMode() != org.bukkit.GameMode.SPECTATOR) {
-                        player.setFlying(false);
-                        player.setAllowFlight(couldFly);
-                    }
-                },
-                20L * (5 + level)
+                () -> player.removeMetadata(Fly_Metadata_Key, getPlugin()),
+                durationTicks
         );
     }
 
@@ -86,13 +105,14 @@ public class MagicGem extends Gem {
         lore.add(ChatColor.WHITE + "Right click: Summon Evoker Fangs");
         lore.add(ChatColor.WHITE + "Shift click: Spawn loyal Vexes");
         lore.add(ChatColor.WHITE + "Left click: Temporary flight");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Haste");}
         return lore;
     }
 
 
     @Override
     public PotionEffectType getDefaultEffectType() {
-        return PotionEffectType.INVISIBILITY;
+        return PotionEffectType.HASTE;
     }
 
     @Override
@@ -102,7 +122,7 @@ public class MagicGem extends Gem {
 
     @Override
     public Particle getDefaultParticle() {
-        return null;
+        return Particle.ENCHANT;
     }
 
     @Override

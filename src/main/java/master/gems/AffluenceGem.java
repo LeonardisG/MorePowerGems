@@ -1,9 +1,12 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -75,17 +78,18 @@ public class AffluenceGem extends Gem {
         lore.add(ChatColor.WHITE + "Right click: Mine blocks faster");
         lore.add(ChatColor.WHITE + "Shift click: Halve all trade prices");
         lore.add(ChatColor.WHITE + "Left click: Double drop rates");
+        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Hero of the Village");}
         return lore;
-    }
-
-    @Override
-    public int getDefaultEffectLevel() {
-        return 1;
     }
 
     @Override
     public PotionEffectType getDefaultEffectType() {
         return PotionEffectType.HERO_OF_THE_VILLAGE;
+    }
+
+    @Override
+    public int getDefaultEffectLevel() {
+        return 1;
     }
 
     @Override

@@ -1,9 +1,12 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Player;
@@ -71,8 +74,6 @@ public class EnderGem extends Gem {
             player.teleport(feet);
             player.sendMessage(ChatColor.DARK_PURPLE + "Teleported successfully!");
         }
-
-        player.sendMessage(ChatColor.RED + "Could not find a safe teleport location!");
     }
 
     /** Grants speed, strength, and haste buffs. */
@@ -130,6 +131,7 @@ public class EnderGem extends Gem {
                     + "Left click: Gain Speed II, Strength II, and Haste IV");
             add(ChatColor.WHITE
                     + "Shift click: Summon dragon breath");
+            if(MPG.PassiveLoreEnabled) {add(ChatColor.AQUA + "Passive: Night vision");}
         }};
     }
 
