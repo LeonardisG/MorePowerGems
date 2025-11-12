@@ -21,6 +21,40 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Download PowerGems and SealLib dependencies
+      run: |
+        mkdir -p ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1
+        mkdir -p ~/.m2/repository/dev/iseal/SealLib/1.2.0.1
+        
+        # Download PowerGems from Modrinth
+        curl -L -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar \
+          "https://cdn.modrinth.com/data/kCgEfc6s/versions/BW1Dg8Y9/PowerGems-3.6.1.1.jar"
+        
+        # Download SealLib from Modrinth
+        curl -L -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar \
+          "https://cdn.modrinth.com/data/8ghxB9YU/versions/0QSvCPq8/SealLib-1.2.0.1.jar"
+        
+        # Create minimal POM files for Maven
+        cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0">
+          <modelVersion>4.0.0</modelVersion>
+          <groupId>dev.iseal</groupId>
+          <artifactId>PowerGems</artifactId>
+          <version>3.6.1.1</version>
+        </project>
+        EOF
+        
+        cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <project xmlns="http://maven.apache.org/POM/4.0.0">
+          <modelVersion>4.0.0</modelVersion>
+          <groupId>dev.iseal</groupId>
+          <artifactId>SealLib</artifactId>
+          <version>1.2.0.1</version>
+        </project>
+        EOF
+
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 

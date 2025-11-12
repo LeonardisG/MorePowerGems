@@ -21,7 +21,7 @@ public class AmethystThrowListener implements Listener {
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {
-        if (!(e.getEntity() instanceof Snowball s) && isAmethyst(s)) return;
+        if (!(e.getEntity() instanceof Snowball s) || !isAmethyst(s)) return;
 
         if (e.getHitEntity() != null) {
             s.getWorld().spawnParticle(Particle.CRIT, s.getLocation(), 10, 0.1, 0.1, 0.1, 0.02);
@@ -39,7 +39,7 @@ public class AmethystThrowListener implements Listener {
 
     @EventHandler
     public void onProjectileDamage(EntityDamageByEntityEvent e) {
-        if (!(e.getDamager() instanceof Snowball s) || isAmethyst(s)) return;
+        if (!(e.getDamager() instanceof Snowball s) || !isAmethyst(s)) return;
         Integer stored = s.getPersistentDataContainer().get(Keys.AMETHYST_LEVEL, PersistentDataType.INTEGER);
         int lvl = stored != null ? stored : 1;
         int clamped = Math.max(1, Math.min(3, lvl));
