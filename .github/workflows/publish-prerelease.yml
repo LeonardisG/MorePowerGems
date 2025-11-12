@@ -5,6 +5,12 @@ on:
     tags:
       - 'v*.*.*-beta*'
       - 'v*.*.*-alpha*'
+      - '*.*.*-beta*'
+      - '*.*.*-alpha*'
+      - 'v*.*.*.*-beta*'
+      - 'v*.*.*.*-alpha*'
+      - '*.*.*.*-beta*'
+      - '*.*.*.*-alpha*'
 
 jobs:
   publish-prerelease:
