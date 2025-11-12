@@ -31,11 +31,13 @@ jobs:
       run: |
         mkdir -p ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1
         mkdir -p ~/.m2/repository/dev/iseal/SealLib/1.2.0.1
-        curl -L -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar \
-          "https://cdn.modrinth.com/data/kCgEfc6s/versions/BW1Dg8Y9/PowerGems-3.6.1.1.jar"
-        curl -L -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar \
-          "https://cdn.modrinth.com/data/8ghxB9YU/versions/0QSvCPq8/SealLib-1.2.0.1.jar"
-        cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << EOF
+        POWERGEMS_URL=$(curl -s "https://api.modrinth.com/v2/version/BW1Dg8Y9" | jq -r '.files[0].url')
+        curl -L -f -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar "$POWERGEMS_URL"
+        SEALLIB_URL=$(curl -s "https://api.modrinth.com/v2/version/0QSvCPq8" | jq -r '.files[0].url')
+        curl -L -f -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar "$SEALLIB_URL"
+        unzip -t ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar > /dev/null
+        unzip -t ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar > /dev/null
+        cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
           <modelVersion>4.0.0</modelVersion>
@@ -44,7 +46,7 @@ jobs:
           <version>3.6.1.1</version>
         </project>
         EOF
-        cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << EOF
+        cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
           <modelVersion>4.0.0</modelVersion>

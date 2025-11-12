@@ -26,16 +26,27 @@ jobs:
         mkdir -p ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1
         mkdir -p ~/.m2/repository/dev/iseal/SealLib/1.2.0.1
         
-        # Download PowerGems from Modrinth
-        curl -L -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar \
-          "https://cdn.modrinth.com/data/kCgEfc6s/versions/BW1Dg8Y9/PowerGems-3.6.1.1.jar"
+        # Download PowerGems from Modrinth - get the actual file URL from version API
+        echo "Downloading PowerGems..."
+        POWERGEMS_URL=$(curl -s "https://api.modrinth.com/v2/version/BW1Dg8Y9" | jq -r '.files[0].url')
+        echo "PowerGems URL: $POWERGEMS_URL"
+        curl -L -f -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar "$POWERGEMS_URL"
         
         # Download SealLib from Modrinth
-        curl -L -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar \
-          "https://cdn.modrinth.com/data/8ghxB9YU/versions/0QSvCPq8/SealLib-1.2.0.1.jar"
+        echo "Downloading SealLib..."
+        SEALLIB_URL=$(curl -s "https://api.modrinth.com/v2/version/0QSvCPq8" | jq -r '.files[0].url')
+        echo "SealLib URL: $SEALLIB_URL"
+        curl -L -f -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar "$SEALLIB_URL"
+        
+        # Verify JARs are valid
+        echo "Verifying PowerGems JAR..."
+        unzip -t ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar > /dev/null
+        echo "Verifying SealLib JAR..."
+        unzip -t ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar > /dev/null
+        echo "JARs verified successfully!"
         
         # Create minimal POM files for Maven
-        cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << EOF
+        cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
           <modelVersion>4.0.0</modelVersion>
@@ -45,7 +56,7 @@ jobs:
         </project>
         EOF
         
-        cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << EOF
+        cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
           <modelVersion>4.0.0</modelVersion>
