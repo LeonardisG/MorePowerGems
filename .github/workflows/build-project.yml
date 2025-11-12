@@ -1,0 +1,35 @@
+name: Build project
+
+on:
+  push:
+    tags:
+      - '*.*.*.*'
+
+    branches:
+    - Revert-back
+
+    workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build it
+        run: mvn clean package -B
+
+      - name: release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: target/*.jar
+          generate_release_notes: true
+
