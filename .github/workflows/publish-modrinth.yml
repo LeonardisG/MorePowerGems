@@ -25,12 +25,37 @@ jobs:
       run: |
         mkdir -p ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1
         mkdir -p ~/.m2/repository/dev/iseal/SealLib/1.2.0.1
-        POWERGEMS_URL=$(curl -s "https://api.modrinth.com/v2/version/BW1Dg8Y9" | jq -r '.files[0].url')
-        curl -L -f -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar "$POWERGEMS_URL"
-        SEALLIB_URL=$(curl -s "https://api.modrinth.com/v2/version/0QSvCPq8" | jq -r '.files[0].url')
-        curl -L -f -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar "$SEALLIB_URL"
-        unzip -t ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar > /dev/null
-        unzip -t ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar > /dev/null
+        
+        # Download PowerGems using correct project ID
+        echo "Downloading PowerGems from Modrinth..."
+        curl -L -f -o ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar \
+          "https://cdn.modrinth.com/data/kCgEfc6s/versions/BW1Dg8Y9/PowerGems-3.6.1.1.jar"
+        
+        # Download SealLib using correct project ID
+        echo "Downloading SealLib from Modrinth..."
+        curl -L -f -o ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar \
+          "https://cdn.modrinth.com/data/8ghxB9YU/versions/0QSvCPq8/SealLib-1.2.0.1.jar"
+        
+        # Verify JARs are valid
+        echo "Verifying PowerGems JAR..."
+        unzip -t ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar > /dev/null || {
+          echo "PowerGems JAR verification failed!"
+          ls -lh ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar
+          file ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.jar
+          exit 1
+        }
+        
+        echo "Verifying SealLib JAR..."
+        unzip -t ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar > /dev/null || {
+          echo "SealLib JAR verification failed!"
+          ls -lh ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar
+          file ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.jar
+          exit 1
+        }
+        
+        echo "JARs verified successfully!"
+        
+        # Create minimal POM files for Maven
         cat > ~/.m2/repository/dev/iseal/PowerGems/3.6.1.1/PowerGems-3.6.1.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
@@ -40,6 +65,7 @@ jobs:
           <version>3.6.1.1</version>
         </project>
         EOF
+        
         cat > ~/.m2/repository/dev/iseal/SealLib/1.2.0.1/SealLib-1.2.0.1.pom << 'EOF'
         <?xml version="1.0" encoding="UTF-8"?>
         <project xmlns="http://maven.apache.org/POM/4.0.0">
