@@ -35,63 +35,63 @@ Original idea by [@rlxck](https://github.com/rlxck) | [Original PR](https://gith
 
 ---
 
-## 💎 Gems Overview
+## Gems Overview
 
-### **Affluence Gem** 💰
+### **Affluence Gem** 
 - **Right Click:** Haste II for 60s
 - **Shift Click:** Halve all villager trade prices
 - **Left Click:** Double ores and mob drops for 60s
 - **Passive:** Hero of the Village
 
-### **Wither Gem** 💀
+### **Wither Gem** 
 - **Right Click:** Reduced damage + projectile blocking
 - **Shift Click:** Explosion giving enemies Glowing + Wither
 - **Left Click:** Shoot 3 Wither skulls rapidly
 - **Passive:** Regeneration
 
-### **Shulker Gem** 🟪
+### **Shulker Gem** 
 - **Right Click:** Armor toughness boost for 20s
 - **Shift Click:** Levitation II on nearby players (25 blocks, 10s)
 - **Left Click:** Shoot shulker projectiles
 - **Passive:** Resistance
 
-### **Poison Gem** 🧪
+### **Poison Gem** 
 - **Right Click:** Shoot debuff arrow (50% Instant Damage II / 50% Poison II)
 - **Shift Click:** Clear all negative effects
 - **Left Click:** Self Regeneration II + target Slow Falling + Slowness
 - **Passive:** Regeneration
 
-### **Ruin Gem** 🗿
+### **Ruin Gem** 
 - **Right Click:** Mossify nearby terrain (10 blocks) + gain Strength
 - **Shift Click:** Spawn multiplying silverfish
 - **Left Click:** Grapple to walls/ceilings for 2s
 - **Passive:** Jump Boost
 
-### **Amethyst Gem** 💜
+### **Amethyst Gem** 
 - **Right Click:** Throw amethyst shard
 - **Shift Click:** Illuminate nearby players with Glowing
 - **Left Click:** Trap player in amethyst cage (non-lethal damage)
 - **Passive:** Absorption
 
-### **Brezze Gem** 💨
+### **Brezze Gem** 
 - **Right Click:** Dash forward
 - **Shift Click:** Summon breezes
 - **Left Click:** Launch wind charges
 - **Passive:** No fall damage
 
-### **Ender Gem** 🌌
+### **Ender Gem** 
 - **Right Click:** Random nearby teleport
 - **Shift Click:** Summon dragon breath
 - **Left Click:** Speed II + Strength II + Haste IV
 - **Passive:** Night Vision
 
-### **Magic Gem** ✨
+### **Magic Gem** 
 - **Right Click:** Summon Evoker Fangs
 - **Shift Click:** Spawn loyal Vexes
 - **Left Click:** Temporary creative flight
 - **Passive:** Haste
 
-### **Mech Gem** 🔥
+### **Mech Gem** 
 - **Right Click:** Create explosion
 - **Shift Click:** Protective magma box
 - **Left Click:** Place temporary lava
