@@ -1,0 +1,72 @@
+name: Check Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check PowerGems version
+      id: powergems
+      run: |
+        LATEST=$(curl -s https://api.modrinth.com/v2/project/powergems/version | jq -r '.[0].version_number')
+        CURRENT=$(grep -oP '<artifactId>PowerGems</artifactId>\s*<version>\K[^<]+' pom.xml | head -1)
+        echo "LATEST=$LATEST" >> $GITHUB_OUTPUT
+        echo "CURRENT=$CURRENT" >> $GITHUB_OUTPUT
+        if [ "$LATEST" != "$CURRENT" ]; then
+          echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
+        else
+          echo "UPDATE_NEEDED=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Check SealLib version
+      id: seallib
+      run: |
+        LATEST=$(curl -s https://api.modrinth.com/v2/project/seallib/version | jq -r '.[0].version_number')
+        CURRENT=$(grep -oP '<artifactId>SealLib</artifactId>\s*<version>\K[^<]+' pom.xml | head -1)
+        echo "LATEST=$LATEST" >> $GITHUB_OUTPUT
+        echo "CURRENT=$CURRENT" >> $GITHUB_OUTPUT
+        if [ "$LATEST" != "$CURRENT" ]; then
+          echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
+        else
+          echo "UPDATE_NEEDED=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Update pom.xml if needed
+      if: steps.powergems.outputs.UPDATE_NEEDED == 'true' || steps.seallib.outputs.UPDATE_NEEDED == 'true'
+      run: |
+        if [ "${{ steps.powergems.outputs.UPDATE_NEEDED }}" == "true" ]; then
+          sed -i "s|<artifactId>PowerGems</artifactId>\s*<version>${{ steps.powergems.outputs.CURRENT }}</version>|<artifactId>PowerGems</artifactId>\n            <version>${{ steps.powergems.outputs.LATEST }}</version>|" pom.xml
+        fi
+        if [ "${{ steps.seallib.outputs.UPDATE_NEEDED }}" == "true" ]; then
+          sed -i "s|<artifactId>SealLib</artifactId>\s*<version>${{ steps.seallib.outputs.CURRENT }}</version>|<artifactId>SealLib</artifactId>\n            <version>${{ steps.seallib.outputs.LATEST }}</version>|" pom.xml
+        fi
+
+    - name: Create Pull Request
+      if: steps.powergems.outputs.UPDATE_NEEDED == 'true' || steps.seallib.outputs.UPDATE_NEEDED == 'true'
+      uses: peter-evans/create-pull-request@v6
+      with:
+        commit-message: "chore: Update dependencies"
+        title: "Update Dependencies"
+        body: |
+          ## Dependency Updates Available
+          
+          This PR updates the following dependencies:
+          
+          ${{ steps.powergems.outputs.UPDATE_NEEDED == 'true' && format('- **PowerGems**: {0} → {1}', steps.powergems.outputs.CURRENT, steps.powergems.outputs.LATEST) || '' }}
+          ${{ steps.seallib.outputs.UPDATE_NEEDED == 'true' && format('- **SealLib**: {0} → {1}', steps.seallib.outputs.CURRENT, steps.seallib.outputs.LATEST) || '' }}
+          
+          Please review the changes and test before merging.
+        branch: dependency-updates
+        delete-branch: true

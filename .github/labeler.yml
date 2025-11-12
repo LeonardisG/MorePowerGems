@@ -1,0 +1,68 @@
+# Automatically label PRs based on changed files
+
+# Gem-related changes
+'gem: affluence':
+  - src/main/java/master/gems/AffluenceGem.java
+
+'gem: amethyst':
+  - src/main/java/master/gems/AmethystGem.java
+
+'gem: brezze':
+  - src/main/java/master/gems/BrezzeGem.java
+
+'gem: ender':
+  - src/main/java/master/gems/EnderGem.java
+
+'gem: magic':
+  - src/main/java/master/gems/MagicGem.java
+
+'gem: mech':
+  - src/main/java/master/gems/MechGem.java
+
+'gem: poison':
+  - src/main/java/master/gems/PoisonGem.java
+
+'gem: ruin':
+  - src/main/java/master/gems/RuinGem.java
+
+'gem: shulker':
+  - src/main/java/master/gems/ShulkerGem.java
+
+'gem: wither':
+  - src/main/java/master/gems/WitherGem.java
+
+# Type labels
+'type: feature':
+  - src/main/java/master/gems/*.java
+
+'type: bug fix':
+  - '**/*.java'
+
+'area: listeners':
+  - src/main/java/master/listeners/*.java
+
+'area: core':
+  - src/main/java/master/MPG.java
+  - src/main/java/master/Keys.java
+
+# Documentation
+'documentation':
+  - '*.md'
+  - docs/**/*
+  - README.md
+  - CHANGELOG.md
+  - CONTRIBUTING.md
+
+# Configuration
+'configuration':
+  - pom.xml
+  - src/main/resources/plugin.yml
+
+# CI/CD
+'ci/cd':
+  - .github/**/*
+
+# Dependencies
+'dependencies':
+  - pom.xml
+

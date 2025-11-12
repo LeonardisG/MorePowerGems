@@ -1,0 +1,73 @@
+blank_issues_enabled: false
+contact_links:
+  - name: PowerGems Discord Support
+    url: https://discord.iseal.dev/
+    about: Join the official PowerGems Discord server for help and support
+  - name: PowerGems Plugin
+    url: https://modrinth.com/plugin/powergems
+    about: View the main PowerGems plugin on Modrinth
+  - name: Documentation
+    url: https://github.com/LeonardisG/MorePowerGems/blob/main/README.md
+    about: Read the plugin documentation
+name: Feature Request
+description: Suggest a new feature or enhancement for MorePowerGems
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Please describe what you'd like to see.
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - New Gem
+        - New Ability for Existing Gem
+        - Configuration Option
+        - Performance Improvement
+        - Quality of Life
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: A clear description of the feature you'd like to see
+      placeholder: I would like...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe the problem this feature would solve or how it would be used
+      placeholder: This would help with...
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Suggested Implementation
+      description: If you have ideas on how this could be implemented, describe them here
+      placeholder: This could work by...
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any alternative solutions or features?
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about the feature request here
+

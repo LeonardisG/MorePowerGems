@@ -1,14 +1,14 @@
-name: Publish to Modrinth
+name: Publish Beta/Alpha to Modrinth
 
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - 'v*.*.*-beta*'
+      - 'v*.*.*-alpha*'
 
 jobs:
-  publish:
+  publish-prerelease:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
 
     steps:
     - name: Checkout repository
@@ -28,6 +28,18 @@ jobs:
       id: get_version
       run: echo "VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
+    - name: Determine version type
+      id: version_type
+      run: |
+        VERSION=${{ steps.get_version.outputs.VERSION }}
+        if [[ $VERSION == *"alpha"* ]]; then
+          echo "TYPE=alpha" >> $GITHUB_OUTPUT
+        elif [[ $VERSION == *"beta"* ]]; then
+          echo "TYPE=beta" >> $GITHUB_OUTPUT
+        else
+          echo "TYPE=release" >> $GITHUB_OUTPUT
+        fi
+
     - name: Upload to Modrinth
       uses: Kir-Antipov/mc-publish@v3.3
       with:
@@ -38,7 +50,7 @@ jobs:
 
         name: MorePowerGems v${{ steps.get_version.outputs.VERSION }}
         version: ${{ steps.get_version.outputs.VERSION }}
-        version-type: release
+        version-type: ${{ steps.version_type.outputs.TYPE }}
 
         loaders: |
           bukkit
@@ -67,10 +79,13 @@ jobs:
 
         java: 21
 
-    - name: Upload JAR to GitHub Release
+    - name: Create GitHub Pre-Release
       uses: softprops/action-gh-release@v2
       with:
+        name: MorePowerGems v${{ steps.get_version.outputs.VERSION }} (${{ steps.version_type.outputs.TYPE }})
         files: target/MorePowerGems-*.jar
+        draft: false
+        prerelease: true
+        generate_release_notes: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-

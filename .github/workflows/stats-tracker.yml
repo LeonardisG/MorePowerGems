@@ -1,0 +1,70 @@
+name: Track Download Statistics
+
+on:
+  schedule:
+    # Run every day at midnight UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  track-stats:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Fetch Modrinth statistics
+      id: stats
+      run: |
+        STATS=$(curl -s https://api.modrinth.com/v2/project/XqguI8fH)
+        DOWNLOADS=$(echo $STATS | jq -r '.downloads')
+        FOLLOWERS=$(echo $STATS | jq -r '.followers')
+        DATE=$(date +%Y-%m-%d)
+        
+        echo "DATE=$DATE" >> $GITHUB_OUTPUT
+        echo "DOWNLOADS=$DOWNLOADS" >> $GITHUB_OUTPUT
+        echo "FOLLOWERS=$FOLLOWERS" >> $GITHUB_OUTPUT
+
+    - name: Update statistics file
+      run: |
+        mkdir -p .github/stats
+        echo "${{ steps.stats.outputs.DATE }},${{ steps.stats.outputs.DOWNLOADS }},${{ steps.stats.outputs.FOLLOWERS }}" >> .github/stats/history.csv
+        
+        # Keep only last 365 days
+        tail -n 365 .github/stats/history.csv > .github/stats/history.tmp
+        mv .github/stats/history.tmp .github/stats/history.csv
+
+    - name: Generate statistics summary
+      run: |
+        cat > .github/stats/README.md << EOF
+        # Download Statistics
+        
+        Last updated: ${{ steps.stats.outputs.DATE }}
+        
+        ## Current Stats
+        - **Total Downloads:** ${{ steps.stats.outputs.DOWNLOADS }}
+        - **Followers:** ${{ steps.stats.outputs.FOLLOWERS }}
+        
+        ## Historical Data
+        
+        This data is automatically updated daily.
+        
+        | Date | Downloads | Followers |
+        |------|-----------|-----------|
+        EOF
+        
+        tail -n 30 .github/stats/history.csv | while IFS=, read -r date downloads followers; do
+          echo "| $date | $downloads | $followers |" >> .github/stats/README.md
+        done
+
+    - name: Commit statistics
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .github/stats/
+        git diff --quiet && git diff --staged --quiet || git commit -m "chore: update download statistics"
+        git push
+

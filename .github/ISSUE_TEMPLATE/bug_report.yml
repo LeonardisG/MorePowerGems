@@ -1,0 +1,182 @@
+name: Bug Report
+description: Report a bug or issue with MorePowerGems
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below.
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: MorePowerGems Version
+      description: What version of MorePowerGems are you using?
+      placeholder: e.g., 2.1.3.1
+    validations:
+      required: true
+
+  - type: input
+    id: powergems-version
+    attributes:
+      label: PowerGems Version
+      description: What version of PowerGems are you using?
+      placeholder: e.g., 3.6.1.1
+    validations:
+      required: true
+
+  - type: input
+    id: seallib-version
+    attributes:
+      label: SealLib Version
+      description: What version of SealLib are you using?
+      placeholder: e.g., 1.2.0.1
+    validations:
+      required: true
+
+  - type: input
+    id: server-type
+    attributes:
+      label: Server Type & Version
+      description: What server software and Minecraft version are you using?
+      placeholder: e.g., Paper 1.21.1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: gem-affected
+    attributes:
+      label: Which gem is affected?
+      description: Select the gem(s) that have issues
+      multiple: true
+      options:
+        - Affluence Gem
+        - Wither Gem
+        - Shulker Gem
+        - Poison Gem
+        - Ruin Gem
+        - Amethyst Gem
+        - Brezze Gem
+        - Ender Gem
+        - Magic Gem
+        - Mech Gem
+        - All/Multiple Gems
+        - Not gem-specific
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: A clear description of what the bug is
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Do this...
+        2. Then do this...
+        3. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: I expected...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs/Error Messages
+      description: Please paste any relevant logs or error messages
+      render: shell
+      placeholder: Paste logs here...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context about the problem here (screenshots, etc.)
+name: Check Dependency Updates
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  check-updates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check PowerGems version
+      id: powergems
+      run: |
+        LATEST=$(curl -s https://api.modrinth.com/v2/project/powergems/version | jq -r '.[0].version_number')
+        CURRENT=$(grep -oP '<artifactId>PowerGems</artifactId>\s*<version>\K[^<]+' pom.xml | head -1)
+        echo "LATEST=$LATEST" >> $GITHUB_OUTPUT
+        echo "CURRENT=$CURRENT" >> $GITHUB_OUTPUT
+        if [ "$LATEST" != "$CURRENT" ]; then
+          echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
+        else
+          echo "UPDATE_NEEDED=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Check SealLib version
+      id: seallib
+      run: |
+        LATEST=$(curl -s https://api.modrinth.com/v2/project/seallib/version | jq -r '.[0].version_number')
+        CURRENT=$(grep -oP '<artifactId>SealLib</artifactId>\s*<version>\K[^<]+' pom.xml | head -1)
+        echo "LATEST=$LATEST" >> $GITHUB_OUTPUT
+        echo "CURRENT=$CURRENT" >> $GITHUB_OUTPUT
+        if [ "$LATEST" != "$CURRENT" ]; then
+          echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
+        else
+          echo "UPDATE_NEEDED=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Update pom.xml if needed
+      if: steps.powergems.outputs.UPDATE_NEEDED == 'true' || steps.seallib.outputs.UPDATE_NEEDED == 'true'
+      run: |
+        if [ "${{ steps.powergems.outputs.UPDATE_NEEDED }}" == "true" ]; then
+          sed -i "s|<artifactId>PowerGems</artifactId>\s*<version>${{ steps.powergems.outputs.CURRENT }}</version>|<artifactId>PowerGems</artifactId>\n            <version>${{ steps.powergems.outputs.LATEST }}</version>|" pom.xml
+        fi
+        if [ "${{ steps.seallib.outputs.UPDATE_NEEDED }}" == "true" ]; then
+          sed -i "s|<artifactId>SealLib</artifactId>\s*<version>${{ steps.seallib.outputs.CURRENT }}</version>|<artifactId>SealLib</artifactId>\n            <version>${{ steps.seallib.outputs.LATEST }}</version>|" pom.xml
+        fi
+
+    - name: Create Pull Request
+      if: steps.powergems.outputs.UPDATE_NEEDED == 'true' || steps.seallib.outputs.UPDATE_NEEDED == 'true'
+      uses: peter-evans/create-pull-request@v6
+      with:
+        commit-message: "chore: Update dependencies"
+        title: "Update Dependencies"
+        body: |
+          ## Dependency Updates Available
+          
+          This PR updates the following dependencies:
+          
+          ${{ steps.powergems.outputs.UPDATE_NEEDED == 'true' && format('- **PowerGems**: {0} → {1}', steps.powergems.outputs.CURRENT, steps.powergems.outputs.LATEST) || '' }}
+          ${{ steps.seallib.outputs.UPDATE_NEEDED == 'true' && format('- **SealLib**: {0} → {1}', steps.seallib.outputs.CURRENT, steps.seallib.outputs.LATEST) || '' }}
+          
+          Please review the changes and test before merging.
+        branch: dependency-updates
+        delete-branch: true
+
