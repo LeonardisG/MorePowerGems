@@ -21,7 +21,7 @@ public class AmethystThrowListener implements Listener {
 
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent e) {
-        if (!(e.getEntity() instanceof Snowball s) || isAmethyst(s)) return;
+        if (!(e.getEntity() instanceof Snowball s) && isAmethyst(s)) return;
 
         if (e.getHitEntity() != null) {
             s.getWorld().spawnParticle(Particle.CRIT, s.getLocation(), 10, 0.1, 0.1, 0.1, 0.02);
