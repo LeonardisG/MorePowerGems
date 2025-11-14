@@ -25,10 +25,36 @@ public class DoubleDropsListener implements Listener {
             if (blockType.name().endsWith("_ORE") || //Check if the block is an ore
                     blockType == Material.ANCIENT_DEBRIS) {
 
-                e.setDropItems(false); // Prevent default drops
-                ItemStack drop = new ItemStack(blockType, 2); // The original block but doubled
-                block.getWorld().dropItemNaturally(blockLocation, drop);
+                e.setDropItems(false);
 
+                ItemStack actualDrop;
+                if (blockType == Material.DIAMOND_ORE || blockType == Material.DEEPSLATE_DIAMOND_ORE) {
+                    actualDrop = new ItemStack(Material.DIAMOND, 2);
+                } else if (blockType == Material.COAL_ORE || blockType == Material.DEEPSLATE_COAL_ORE) {
+                    actualDrop = new ItemStack(Material.COAL, 2);
+                } else if (blockType == Material.IRON_ORE || blockType == Material.DEEPSLATE_IRON_ORE) {
+                    actualDrop = new ItemStack(Material.RAW_IRON, 2);
+                } else if (blockType == Material.GOLD_ORE || blockType == Material.DEEPSLATE_GOLD_ORE) {
+                    actualDrop = new ItemStack(Material.RAW_GOLD, 2);
+                } else if (blockType == Material.COPPER_ORE || blockType == Material.DEEPSLATE_COPPER_ORE) {
+                    actualDrop = new ItemStack(Material.RAW_COPPER, 4);
+                } else if (blockType == Material.EMERALD_ORE || blockType == Material.DEEPSLATE_EMERALD_ORE) {
+                    actualDrop = new ItemStack(Material.EMERALD, 2);
+                } else if (blockType == Material.LAPIS_ORE || blockType == Material.DEEPSLATE_LAPIS_ORE) {
+                    actualDrop = new ItemStack(Material.LAPIS_LAZULI, 8);
+                } else if (blockType == Material.REDSTONE_ORE || blockType == Material.DEEPSLATE_REDSTONE_ORE) {
+                    actualDrop = new ItemStack(Material.REDSTONE, 8);
+                } else if (blockType == Material.NETHER_GOLD_ORE) {
+                    actualDrop = new ItemStack(Material.GOLD_NUGGET, 4);
+                } else if (blockType == Material.NETHER_QUARTZ_ORE) {
+                    actualDrop = new ItemStack(Material.QUARTZ, 2);
+                } else if (blockType == Material.ANCIENT_DEBRIS) {
+                    actualDrop = new ItemStack(Material.ANCIENT_DEBRIS, 2);
+                } else {
+                    actualDrop = new ItemStack(blockType, 2);
+                }
+
+                block.getWorld().dropItemNaturally(blockLocation, actualDrop);
             }
         }
     }

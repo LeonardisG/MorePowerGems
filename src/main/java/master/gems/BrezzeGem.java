@@ -2,6 +2,7 @@ package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+
+import static dev.iseal.sealLib.SealLib.getPlugin;
 
 public class BrezzeGem extends Gem {
     public BrezzeGem() {
@@ -29,11 +32,17 @@ public class BrezzeGem extends Gem {
     /** Launches multiple wind charges that knockback entities. */
     @Override
     protected void rightClick(Player player, int level) {
-        for(int a  = 5 + level; a > 0; a--) {
-            WindCharge windCharge = player.launchProjectile(WindCharge.class);
-            windCharge.setGlowing(true);
-            }
+        int totalCharges = 5 + level;
+
+        for(int i = 0; i < totalCharges; i++) {
+            Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
+                if (player.isOnline() && !player.isDead()) {
+                    WindCharge windCharge = player.launchProjectile(WindCharge.class);
+                    windCharge.setGlowing(true);
+                }
+            }, 3L);
         }
+    }
 
     /** Dash forward in the direction you're facing. */
     @Override

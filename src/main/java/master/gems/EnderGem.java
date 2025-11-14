@@ -4,9 +4,7 @@ import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
-import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AreaEffectCloud;
 import org.bukkit.entity.Player;
@@ -38,41 +36,46 @@ public class EnderGem extends Gem {
         var world = player.getWorld();
 
 
-        for(int a = 0; a < attempts; a++) {
-            var origin = player.getLocation();
-            int dx = rnd.nextInt(-radius, radius + 1);
-            int dz = rnd.nextInt(-radius, radius + 1);
+        try {
+            for (int a = 0; a < attempts; a++) {
+                var origin = player.getLocation();
+                int dx = rnd.nextInt(-radius, radius + 1);
+                int dz = rnd.nextInt(-radius, radius + 1);
 
-            var unsafe = java.util.EnumSet.of(
-                    org.bukkit.Material.LAVA,
-                    org.bukkit.Material.FIRE,
-                    org.bukkit.Material.SOUL_FIRE,
-                    org.bukkit.Material.CACTUS,
-                    org.bukkit.Material.MAGMA_BLOCK,
-                    org.bukkit.Material.POWDER_SNOW
-            );
+                var unsafe = java.util.EnumSet.of(
+                        org.bukkit.Material.LAVA,
+                        org.bukkit.Material.FIRE,
+                        org.bukkit.Material.SOUL_FIRE,
+                        org.bukkit.Material.CACTUS,
+                        org.bukkit.Material.MAGMA_BLOCK,
+                        org.bukkit.Material.POWDER_SNOW
+                );
 
-            int x = origin.getBlockX() + dx;
-            int z = origin.getBlockZ() + dz;
+                int x = origin.getBlockX() + dx;
+                int z = origin.getBlockZ() + dz;
 
-            var highest = world.getHighestBlockAt(x, z);
-            var baseType = highest.getType();
+                var highest = world.getHighestBlockAt(x, z);
+                var baseType = highest.getType();
 
-            if (!baseType.isSolid()) continue;
-            if (highest.isLiquid()) continue;
-            if (unsafe.contains(baseType)) continue;
+                if (!baseType.isSolid()) continue;
+                if (highest.isLiquid()) continue;
+                if (unsafe.contains(baseType)) continue;
 
 
-            var feet = highest.getLocation().add(0.5, 1, 0.5);
-            var head = feet.clone().add(0, 1, 0);
-            if (!feet.getBlock().isEmpty() || !head.getBlock().isEmpty()) continue;
-            if(feet.getBlock().isLiquid() || head.getBlock().isLiquid()) continue;
+                var feet = highest.getLocation().add(0.5, 1, 0.5);
+                var head = feet.clone().add(0, 1, 0);
+                if (!feet.getBlock().isEmpty() || !head.getBlock().isEmpty()) continue;
+                if (feet.getBlock().isLiquid() || head.getBlock().isLiquid()) continue;
 
-            int y = feet.getBlockY();
-            if (y < world.getMinHeight() || y > world.getMaxHeight()) continue;
+                int y = feet.getBlockY();
+                if (y < world.getMinHeight() || y > world.getMaxHeight()) continue;
 
-            player.teleport(feet);
-            player.sendMessage(ChatColor.DARK_PURPLE + "Teleported successfully!");
+                player.teleport(feet);
+                player.sendMessage(ChatColor.DARK_PURPLE + "Teleported successfully!");
+                break;
+            }
+        } catch (Exception e) {
+            player.sendMessage(ChatColor.RED + "Teleportation failed!");
         }
     }
 

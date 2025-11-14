@@ -59,7 +59,7 @@ public class PoisonGem extends Gem {
         if (targetPlayer != null) {
             targetPlayer.addPotionEffect(new PotionEffect(
                     PotionEffectType.POISON,
-                    20 * level,
+                    60 * level,
                     1,
                     true,
                     true

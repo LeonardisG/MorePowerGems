@@ -3,7 +3,6 @@ package master.gems;
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
 import org.bukkit.*;
-import org.bukkit.Registry;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EntityType;

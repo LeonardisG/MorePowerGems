@@ -2,12 +2,7 @@ package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
-import org.bukkit.Registry;
+import org.bukkit.*;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -84,6 +79,7 @@ public class ShulkerGem extends Gem {
         Vector direction = player.getEyeLocation().getDirection();
         Location targetLocation = player.getLocation().clone();
 
+
         int distance = 5 + (level * 2);
         targetLocation.add(direction.multiply(distance));
 
@@ -105,7 +101,9 @@ public class ShulkerGem extends Gem {
 
         if (targetLocation.getBlock().getType() == Material.AIR &&
             targetLocation.clone().add(0, 1, 0).getBlock().getType() == Material.AIR &&
-            targetLocation.clone().subtract(0, 1, 0).getBlock().getType().isSolid()) {
+            targetLocation.clone().subtract(0, 1, 0).getBlock().getType().isSolid() &&
+        targetLocation.clone().subtract(0, 1, 0).getBlock().getType() != Material.VOID_AIR
+        ) {
 
             // Spawn particles at old location
             player.getWorld().spawnParticle(Particle.PORTAL, player.getLocation(), 20);

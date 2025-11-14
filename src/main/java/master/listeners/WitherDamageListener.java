@@ -22,11 +22,11 @@ public class WitherDamageListener implements Listener {
         }}
 
     /**
-     * Cancels projectile damage from players with Wither Gem protection.
+     * Cancels projectile damage for players with Wither Gem protection.
      */
     @EventHandler
     public void onProjectileDamage(EntityDamageByEntityEvent e) {
-        if (e.getDamager() instanceof Player plr &&
+        if (e.getEntity() instanceof Player plr &&
                 plr.hasMetadata(WitherGem.WITHER_DAMAGE_REDUCTION_KEY) &&
                 e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
             e.setCancelled(true); // Cancel the damage from projectiles
