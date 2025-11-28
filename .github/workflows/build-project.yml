@@ -40,6 +40,16 @@ jobs:
           files: target/*.jar
           generate_release_notes: true
 
+      - name: Get Release Notes
+        id: get_notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "BODY<<EOF" >> $GITHUB_OUTPUT
+          gh release view ${{ steps.get_version.outputs.VERSION }} --json body --jq .body >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Publish to Modrinth
         uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -48,6 +58,7 @@ jobs:
           files: target/*.jar
           name: ${{ steps.get_version.outputs.VERSION }}
           version: ${{ steps.get_version.outputs.VERSION }}
+          changelog: ${{ steps.get_notes.outputs.BODY }}
           loaders: |
             spigot
             paper
