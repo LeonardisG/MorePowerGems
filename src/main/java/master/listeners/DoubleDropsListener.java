@@ -1,14 +1,16 @@
 package master.listeners;
 
-import master.gems.AffluenceGem;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Location;
-import org.bukkit.Material;
+
+import master.gems.AffluenceGem;
 
 public class DoubleDropsListener implements Listener {
 
@@ -17,11 +19,21 @@ public class DoubleDropsListener implements Listener {
      */
     @EventHandler
     public void dropEvent(BlockBreakEvent e) {
+        if(e.isCancelled()) {
+            return;
+        }
         if (e.getPlayer().hasMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY)) {
             Block block = e.getBlock(); //The original block
             Material blockType = block.getType(); //Its material type
             Location blockLocation = block.getLocation(); //Its location
 
+            ItemStack tool = e.getPlayer().getInventory().getItemInMainHand();
+            
+            if (tool != null && tool.getType() != Material.AIR && tool.hasItemMeta() && tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
+                e.setDropItems(true);
+                return;
+            }
+        
             if (blockType.name().endsWith("_ORE") || //Check if the block is an ore
                     blockType == Material.ANCIENT_DEBRIS) {
 

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import org.bukkit.*;
-import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;

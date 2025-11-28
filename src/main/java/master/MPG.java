@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 
 public final class MPG extends JavaPlugin {
     public static boolean PassiveLoreEnabled = true;
+    private TradeListener tradeListener;
 
     @Override
     public void onEnable() {
@@ -58,5 +59,8 @@ public final class MPG extends JavaPlugin {
 
     @Override
     public void onDisable() {
+    if(tradeListener != null) {
+        tradeListener.cleanup();
     }
+}
 }

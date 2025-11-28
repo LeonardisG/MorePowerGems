@@ -5,11 +5,11 @@ import master.MPG;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
-import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.EvokerFangs;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vex;
 import org.bukkit.event.block.Action;
@@ -87,9 +87,11 @@ public class MagicGem extends Gem {
                 vex.getPersistentDataContainer().set(EVOKER_OWNER, PersistentDataType.STRING ,player.getUniqueId().toString());
                 var nearby = player.getNearbyEntities(15, 15, 15);
                 for (var entity : nearby) {
-                    if (entity instanceof org.bukkit.entity.Monster ||
-                        (entity instanceof Player p && p != player)) {
-                        vex.setTarget((org.bukkit.entity.LivingEntity) entity);
+                    if (entity instanceof Monster ||
+                        (entity instanceof Player p && p != player
+                            && vex.getPersistentDataContainer().get(EVOKER_OWNER, PersistentDataType.STRING )!= p.getUniqueId().toString()
+                        )) {
+                        vex.setTarget((LivingEntity) entity);
                         break;
                     }
                 }
