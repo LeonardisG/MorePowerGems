@@ -3,7 +3,6 @@ package master.listeners;
 import dev.iseal.powergems.PowerGems;
 import master.gems.AffluenceGem;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
