@@ -16,7 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 public class AmethystThrowListener implements Listener {
     private boolean isAmethystProjectile(Snowball s) {
         PersistentDataContainer c = s.getPersistentDataContainer();
-        return !c.has(Keys.AMETHYST_PROJECTILE, PersistentDataType.BYTE);
+        return c.has(Keys.AMETHYST_PROJECTILE, PersistentDataType.BYTE);
     }
 
     @EventHandler

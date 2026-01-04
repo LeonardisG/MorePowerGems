@@ -172,7 +172,7 @@ public class RuinGem extends Gem {
             }
         }
     }
-
+    //TODO: Rewrite this method
     /** Spawns a silverfish that infests blocks and reproduces. */
     private void spawnSpecialSilverFish(Player plr, Location loc, int level, int remainingDepth, int[] totalSpawned, int maxTotal) {
         Plugin plugin = getPlugin();

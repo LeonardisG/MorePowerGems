@@ -33,22 +33,22 @@ jobs:
       - name: Build it
         run: mvn clean package -B
 
+      - name: Generate Release Notes
+        id: gen_notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method POST /repos/${{ github.repository }}/releases/generate-notes \
+            -f tag_name="${{ steps.get_version.outputs.VERSION }}" \
+            -f target_commitish="${{ github.sha }}" \
+            --jq .body > release_notes.md
+
       - name: release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ steps.get_version.outputs.VERSION }}
           files: target/*.jar
-          generate_release_notes: true
-
-      - name: Get Release Notes
-        id: get_notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "BODY<<EOF" >> $GITHUB_OUTPUT
-          gh release view ${{ steps.get_version.outputs.VERSION }} --json body --jq .body >> $GITHUB_OUTPUT
-          echo "" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          body_path: release_notes.md
 
       - name: Publish to Modrinth
         uses: Kir-Antipov/mc-publish@v3.3
@@ -58,7 +58,7 @@ jobs:
           files: target/*.jar
           name: ${{ steps.get_version.outputs.VERSION }}
           version: ${{ steps.get_version.outputs.VERSION }}
-          changelog: ${{ steps.get_notes.outputs.BODY }}
+          changelog-file: release_notes.md
           loaders: |
             spigot
             paper

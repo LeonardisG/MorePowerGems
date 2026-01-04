@@ -17,6 +17,7 @@ public class PlayerLeaveEvent implements Listener {
      */
     @EventHandler
     public void onPlayerLeaveEvent(PlayerQuitEvent e) {
+        e.getPlayer().closeInventory();
         e.getPlayer().removeMetadata(AffluenceGem.DISCOUNT_METADATA_KEY, plugin);
         e.getPlayer().removeMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY, plugin);
         e.getPlayer().removeMetadata(WitherGem.WITHER_DAMAGE_REDUCTION_KEY, plugin);

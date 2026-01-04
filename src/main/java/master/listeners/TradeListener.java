@@ -23,8 +23,7 @@ import java.util.logging.Logger;
  * This listener applies a 50% discount on all items traded with villagers by halving both the
  * price multiplier and ingredient amounts.
  */
-public class TradeListener implements Listener {
-
+public class TradeListener implements Listener {   
     private final Logger logger = PowerGems.getPlugin().getLogger();
     public Map<Player, List<MerchantRecipe>> originalRecipes = new HashMap<>();
     /**

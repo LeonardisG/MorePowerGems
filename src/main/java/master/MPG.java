@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 
 public final class MPG extends JavaPlugin {
     public static boolean PassiveLoreEnabled = true;
-    private TradeListener tradeListener;
-
+private TradeListener tradeListener;
     @Override
     public void onEnable() {
         SingletonManager sm = SingletonManager.getInstance();
         GeneralConfigManager configManager = sm.configManager.getRegisteredConfigInstance(GeneralConfigManager.class);
         PassiveLoreEnabled = configManager.giveGemPermanentEffectOnLvlX();
+        tradeListener = new TradeListener();
 
         Logger logger = getLogger();
         Keys.init(this);
@@ -47,7 +47,7 @@ public final class MPG extends JavaPlugin {
         logger.info("Registered MorePowerGems gems");
 
         // Listeners
-        getServer().getPluginManager().registerEvents(new TradeListener(), this);
+        getServer().getPluginManager().registerEvents(tradeListener, this);
         getServer().getPluginManager().registerEvents(new DoubleDropsListener(), this);
         getServer().getPluginManager().registerEvents(new WitherDamageListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerLeaveEvent(), this);

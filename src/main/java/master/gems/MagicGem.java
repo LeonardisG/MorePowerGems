@@ -73,7 +73,7 @@ public class MagicGem extends Gem {
         Bukkit.getScheduler().runTaskLater(
                 getPlugin(),
                 () -> player.removeMetadata(Fly_Metadata_Key, getPlugin()),
-                durationTicks
+                durationTicks + 80L
         );
     }
 
@@ -88,8 +88,8 @@ public class MagicGem extends Gem {
                 var nearby = player.getNearbyEntities(15, 15, 15);
                 for (var entity : nearby) {
                     if (entity instanceof Monster ||
-                        (entity instanceof Player p && p != player
-                            && vex.getPersistentDataContainer().get(EVOKER_OWNER, PersistentDataType.STRING )!= p.getUniqueId().toString()
+                        (entity instanceof Player p
+                            && vex.getPersistentDataContainer().get(EVOKER_OWNER, PersistentDataType.STRING ) == p.getUniqueId().toString()
                         )) {
                         vex.setTarget((LivingEntity) entity);
                         break;

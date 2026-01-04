@@ -4,6 +4,7 @@ import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AreaEffectCloud;
@@ -43,12 +44,12 @@ public class EnderGem extends Gem {
                 int dz = rnd.nextInt(-radius, radius + 1);
 
                 var unsafe = java.util.EnumSet.of(
-                        org.bukkit.Material.LAVA,
-                        org.bukkit.Material.FIRE,
-                        org.bukkit.Material.SOUL_FIRE,
-                        org.bukkit.Material.CACTUS,
-                        org.bukkit.Material.MAGMA_BLOCK,
-                        org.bukkit.Material.POWDER_SNOW
+                        Material.LAVA,
+                        Material.FIRE,
+                        Material.SOUL_FIRE,
+                        Material.CACTUS,
+                        Material.MAGMA_BLOCK,
+                        Material.POWDER_SNOW
                 );
 
                 int x = origin.getBlockX() + dx;
@@ -117,7 +118,7 @@ public class EnderGem extends Gem {
         cloud.setWaitTime(0);
         cloud.setReapplicationDelay(90);
         cloud.setSource(player);
-        cloud.setParticle(Particle.DRAGON_BREATH);
+        cloud.setParticle(Particle.DRAGON_BREATH, 1.0f);
         cloud.setDuration(duration);
         cloud.setRadiusPerTick(-0.02F);
     }
