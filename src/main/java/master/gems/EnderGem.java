@@ -1,7 +1,7 @@
 package master.gems;
 
-import dev.iseal.powergems.misc.AbstractClasses.Gem;
-import master.MPG;
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,7 +13,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import java.util.ArrayList;
+
+import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 
 
 
@@ -109,7 +111,9 @@ public class EnderGem extends Gem {
 
     /** Spawns a damaging dragon breath cloud at your location. */
     @Override
-    protected void shiftClick(Player player, int level) {
+    protected void shiftClick(Player player, int level)
+    {
+        int McVersion= MPG.versionChecker();
         int duration = 200 + level * 100;
         Location location = player.getLocation().add(0,0.1,0);
         AreaEffectCloud cloud = player.getWorld().spawn(location, AreaEffectCloud.class);
@@ -118,7 +122,12 @@ public class EnderGem extends Gem {
         cloud.setWaitTime(0);
         cloud.setReapplicationDelay(90);
         cloud.setSource(player);
-        cloud.setParticle(Particle.DRAGON_BREATH, 1.0f);
+        if(McVersion > 1218) {
+            cloud.setParticle(Particle.DRAGON_BREATH, 1.0f);
+        } else {
+            cloud.setParticle(Particle.DRAGON_BREATH);
+        }
+
         cloud.setDuration(duration);
         cloud.setRadiusPerTick(-0.02F);
     }

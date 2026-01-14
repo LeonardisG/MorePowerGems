@@ -6,6 +6,8 @@ import dev.iseal.powergems.managers.SingletonManager;
 import dev.iseal.sealLib.Updater.UpdateChecker;
 import master.gems.*;
 import master.listeners.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Particle;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
@@ -62,5 +64,14 @@ private TradeListener tradeListener;
     if(tradeListener != null) {
         tradeListener.cleanup();
     }
+}
+    public static int versionChecker() {
+        String mcVersion= Bukkit.getBukkitVersion();
+        String versionOnly = mcVersion.split("-")[0];
+        String[] parts = versionOnly.split("\\.");
+        int major = Integer.parseInt(parts[0]);
+        int minor = Integer.parseInt(parts[1]);
+        int patch = Integer.parseInt(parts[2]);
+        return major * 1000 + minor * 10 + patch;
 }
 }
