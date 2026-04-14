@@ -3,7 +3,6 @@ package master.gems;
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -76,7 +75,7 @@ public class MechGem extends Gem {
     // Creates a temporary magma block box around the player
     @Override
     protected void shiftClick(Player player, int level) {
-        Location playerLoc = player.getLocation();
+        Location playerLoc = player.getLocation().getBlock().getLocation();
         ArrayList<FallingBlock> blocks = new ArrayList<>();
 
         // Create walls (3 blocks tall, hollow inside)
@@ -84,16 +83,18 @@ public class MechGem extends Gem {
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
                     // Skip center and corners
-                    if ((x == 0 && z == 0) || (Math.abs(x) == 1 && Math.abs(z) == 1)) {
+                    if ((x == 0 && z == 0)) {
                         continue;
                     }
 
                     Location blockLoc = playerLoc.clone().add(x, y, z);
 
+
                     if (blockLoc.getBlock().getType() == Material.AIR) {
-                        FallingBlock fallingBlock = player.getWorld().spawnFallingBlock(
+                        FallingBlock fallingBlock = player.getWorld().spawn(
                                 blockLoc,
-                                Material.MAGMA_BLOCK.createBlockData()
+                                FallingBlock.class,
+                                fb -> fb.setBlockData(Material.MAGMA_BLOCK.createBlockData())
                         );
 
                         fallingBlock.setDropItem(false);
@@ -112,9 +113,10 @@ public class MechGem extends Gem {
                 Location blockLoc = playerLoc.clone().add(x, -1, z);
 
                 if (blockLoc.getBlock().getType() == Material.AIR) {
-                    FallingBlock fallingBlock = player.getWorld().spawnFallingBlock(
+                    FallingBlock fallingBlock = player.getWorld().spawn(
                             blockLoc,
-                            Material.MAGMA_BLOCK.createBlockData()
+                            FallingBlock.class,
+                            fb -> fb.setBlockData(Material.MAGMA_BLOCK.createBlockData())
                     );
 
                     fallingBlock.setDropItem(false);
@@ -132,9 +134,10 @@ public class MechGem extends Gem {
                 Location blockLoc = playerLoc.clone().add(x, 3, z);
 
                 if (blockLoc.getBlock().getType() == Material.AIR) {
-                    FallingBlock fallingBlock = player.getWorld().spawnFallingBlock(
+                    FallingBlock fallingBlock = player.getWorld().spawn(
                             blockLoc,
-                            Material.MAGMA_BLOCK.createBlockData()
+                            FallingBlock.class,
+                            fb -> fb.setBlockData(Material.MAGMA_BLOCK.createBlockData())
                     );
 
                     fallingBlock.setDropItem(false);
@@ -158,12 +161,12 @@ public class MechGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.DARK_RED + "Level %level%");
-        lore.add(ChatColor.DARK_RED + "Abilities");
-        lore.add(ChatColor.WHITE + "Right Click: Create an explosion");
-        lore.add(ChatColor.WHITE + "Left Click: Place temporary lava around you");
-        lore.add(ChatColor.WHITE + "Shift Click: Create a protective magma box");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Fire Resistance");}
+        lore.add("§4Level %level%");
+        lore.add("§4Abilities");
+        lore.add("§fRight Click: Create an explosion");
+        lore.add("§fLeft Click: Place temporary lava around you");
+        lore.add("§fShift Click: Create a protective magma box");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Fire Resistance");}
         return lore;
     }
 

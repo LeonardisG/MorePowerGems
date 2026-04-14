@@ -1,7 +1,7 @@
 package master.listeners;
 
 import dev.iseal.powergems.PowerGems;
-import master.gems.AffluenceGem;
+import master.Keys;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +11,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
+
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +37,9 @@ public class TradeListener implements Listener {
             // Check if this is a merchant inventory, the entity is a player, and the player has discount metadata
             if (e.getInventory() instanceof MerchantInventory merchantInventory &&
                     e.getPlayer() instanceof Player player &&
-                    player.hasMetadata(AffluenceGem.DISCOUNT_METADATA_KEY)) {
-                        
+                    player.getPersistentDataContainer().has(Keys.AFFLUENCE_DISCOUNT,
+                            PersistentDataType.BYTE)) {
+
 
                 originalRecipes.put(player, new ArrayList<>(merchantInventory.getMerchant().getRecipes()));
                 // Get original recipes and create a container for discounted ones
@@ -58,10 +61,9 @@ public class TradeListener implements Listener {
             @EventHandler
             public void onInventoryClose(InventoryCloseEvent event) {
               Player player = (Player) event.getPlayer();
-            if (event.getInventory() instanceof MerchantInventory &&
+            if (event.getInventory() instanceof MerchantInventory merchantInventory &&
          originalRecipes.containsKey(player)) {
-             MerchantInventory merchantInventory = (MerchantInventory) event.getInventory();
-             {
+                {
                  
             // Reset merchant recipes to original
             merchantInventory.getMerchant().setRecipes(originalRecipes.get(player));

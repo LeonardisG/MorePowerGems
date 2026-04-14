@@ -55,6 +55,7 @@ public class RuinGem extends Gem {
     /**
      * Creates an infestation of silverfish that spread and infest blocks.
      */
+    //TODO: This method is completely broken in 1.21.11+ Needs urgent updating, this is so inefficient,I'm gonna throw up
     @Override
     protected void shiftClick(Player player, int level) {
         int[] totalSpawned = {0};
@@ -66,12 +67,12 @@ public class RuinGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Level %level%");
-        lore.add(ChatColor.GRAY + "Abilities");
-        lore.add(ChatColor.WHITE + "Right click: Transform surrounding blocks into moss.");
-        lore.add(ChatColor.WHITE + "Shift click: Makes an infestation of silverfish that spread and infest blocks.");
-        lore.add(ChatColor.WHITE + "Left click: Grapple to blocks in your line of sight.");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Jump boost.");}
+        lore.add("§7Level %level%");
+        lore.add("§7Abilities");
+        lore.add("§fRight click: Transform surrounding blocks into moss.");
+        lore.add("§fShift click: Makes an infestation of silverfish that spread and infest blocks.");
+        lore.add("§fLeft click: Grapple to blocks in your line of sight.");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Jump boost.");}
         return lore;
     }
 

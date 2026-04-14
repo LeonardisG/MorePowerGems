@@ -2,7 +2,9 @@ package master.gems;
 
 import java.util.ArrayList;
 
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -74,11 +76,11 @@ public class EnderGem extends Gem {
                 if (y < world.getMinHeight() || y > world.getMaxHeight()) continue;
 
                 player.teleport(feet);
-                player.sendMessage(ChatColor.DARK_PURPLE + "Teleported successfully!");
+                player.sendMessage(Component.text("Teleported successfully!", NamedTextColor.DARK_PURPLE));
                 break;
             }
         } catch (Exception e) {
-            player.sendMessage(ChatColor.RED + "Teleportation failed!");
+            player.sendMessage(Component.text("Teleportation failed!", NamedTextColor.RED));
         }
     }
 
@@ -113,7 +115,6 @@ public class EnderGem extends Gem {
     @Override
     protected void shiftClick(Player player, int level)
     {
-        int McVersion= MPG.versionChecker();
         int duration = 200 + level * 100;
         Location location = player.getLocation().add(0,0.1,0);
         AreaEffectCloud cloud = player.getWorld().spawn(location, AreaEffectCloud.class);
@@ -122,12 +123,7 @@ public class EnderGem extends Gem {
         cloud.setWaitTime(0);
         cloud.setReapplicationDelay(90);
         cloud.setSource(player);
-        if(McVersion > 1218) {
-            cloud.setParticle(Particle.DRAGON_BREATH, 1.0f);
-        } else {
-            cloud.setParticle(Particle.DRAGON_BREATH);
-        }
-
+        cloud.setParticle(Particle.DRAGON_BREATH, 1.0f);
         cloud.setDuration(duration);
         cloud.setRadiusPerTick(-0.02F);
     }
@@ -136,15 +132,12 @@ public class EnderGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         return new ArrayList<>() {{
-            add(ChatColor.DARK_PURPLE + "Level %level%");
-            add(ChatColor.DARK_PURPLE + "Abilities");
-            add(ChatColor.WHITE
-                    + "Right click: Teleport to a random location nearby");
-            add(ChatColor.WHITE
-                    + "Left click: Gain Speed II, Strength II, and Haste IV");
-            add(ChatColor.WHITE
-                    + "Shift click: Summon dragon breath");
-            if(MPG.PassiveLoreEnabled) {add(ChatColor.AQUA + "Passive: Night vision");}
+            add("§5Level %level%");
+            add("§5Abilities");
+            add("§fRight click: Teleport to a random location nearby");
+            add("§fLeft click: Gain Speed II, Strength II, and Haste IV");
+            add("§fShift click: Summon dragon breath");
+            if(MPG.PassiveLoreEnabled) {add("§bPassive: Night vision");}
         }};
     }
 

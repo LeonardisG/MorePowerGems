@@ -1,6 +1,7 @@
 package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.Keys;
 import master.MPG;
 
 import static dev.iseal.sealLib.SealLib.getPlugin;
@@ -14,15 +15,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 
 public class WitherGem extends Gem {
 
-    public static final String WITHER_DAMAGE_REDUCTION_KEY = "WITHER_DAMAGE_REDUCTION";
-    public static final String WITHER_SKULL_KEY = "WITHER_SKULL";
-    public static final String WITHER_SKULL_LEVEL_KEY = "WITHER_SKULL_LEVEL";
     public WitherGem() {
         super("Wither");
     }
@@ -43,8 +44,8 @@ public class WitherGem extends Gem {
                 witherSkull.setGlowing(true);
                 witherSkull.setShooter(player);
                 witherSkull.setCharged(true);
-                witherSkull.setMetadata(WITHER_SKULL_KEY, new FixedMetadataValue(getPlugin(), true));
-                witherSkull.setMetadata(WITHER_SKULL_LEVEL_KEY, new FixedMetadataValue(getPlugin(), level));
+                witherSkull.getPersistentDataContainer().set(Keys.WITHER_SKULL, PersistentDataType.BYTE, (byte) 1);
+                witherSkull.getPersistentDataContainer().set(Keys.WITHER_SKULL_LEVEL, PersistentDataType.INTEGER, level);
             }, (long) i * delay);
         }
     }
@@ -52,16 +53,15 @@ public class WitherGem extends Gem {
     /** Applies temporary damage reduction; duration scales with level. */
     @Override
     protected void rightClick(Player player, int level) {
-        player.setMetadata(WITHER_DAMAGE_REDUCTION_KEY,
-                new FixedMetadataValue(getPlugin(), true));
-        player.sendMessage(ChatColor.BLACK + "You are now immune to projectiles and take reduced damage for " +
-                (10 + (2 * Math.max(1, level))) + " seconds!");
+        player.getPersistentDataContainer().set(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE, (byte) 1);
+        player.sendMessage(Component.text("You are now immune to projectiles and take reduced damage for " +
+                (10 + (2 * Math.max(1, level))) + " seconds!", NamedTextColor.BLACK));
         int durationTicks = (10 + (2 * Math.max(1, level))) * 20;
 
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-            if (player.hasMetadata(WITHER_DAMAGE_REDUCTION_KEY)) {
-                player.removeMetadata(WITHER_DAMAGE_REDUCTION_KEY, getPlugin());
-                player.sendMessage(ChatColor.BLACK + "Your damage reduction has worn off.");
+            if (player.getPersistentDataContainer().has(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE)) {
+                player.getPersistentDataContainer().remove(Keys.WITHER_DAMAGE_REDUCTION);
+                player.sendMessage(Component.text("Your damage reduction has worn off.", NamedTextColor.BLACK));
             }
         }, durationTicks);
     }
@@ -79,15 +79,12 @@ public class WitherGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.DARK_GRAY + "Level %level%");
-        lore.add(ChatColor.DARK_GRAY + "Abilities");
-        lore.add(ChatColor.WHITE
-                + "Right click: Reduce damage for 50% against all attacks, and 100% against projectiles");
-        lore.add(ChatColor.WHITE
-                + "Shift click: Create explosion and give everyone around you glowing effect");
-        lore.add(ChatColor.WHITE
-                + "Left click: Launch wither skulls at your target");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Regeneration");}
+        lore.add("§8Level %level%");
+        lore.add("§8Abilities");
+        lore.add("§fRight click: Reduce damage for 50% against all attacks, and 100% against projectiles");
+        lore.add("§fShift click: Create explosion and give everyone around you glowing effect");
+        lore.add("§fLeft click: Launch wither skulls at your target");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
         return lore;
     }
 

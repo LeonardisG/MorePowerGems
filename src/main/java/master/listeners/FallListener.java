@@ -3,7 +3,7 @@ package master.listeners;
 import dev.iseal.powergems.managers.GemManager;
 import dev.iseal.powergems.managers.NamespacedKeyManager;
 import dev.iseal.powergems.managers.SingletonManager;
-import master.gems.MagicGem;
+import master.Keys;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +29,8 @@ public class FallListener implements Listener {
             return;
         }
 
-        if (hasBrezzePowerGem(player) || player.hasMetadata(MagicGem.Fly_Metadata_Key)) {
+        if (hasBrezzePowerGem(player) || player.getPersistentDataContainer()
+                .has(Keys.MAGIC_FLY, PersistentDataType.BYTE)) {
             e.setCancelled(true);
         }
     }

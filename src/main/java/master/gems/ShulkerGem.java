@@ -13,6 +13,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +51,7 @@ public class ShulkerGem extends Gem {
             }
         }
 
-        player.sendMessage(ChatColor.LIGHT_PURPLE + "Applied levitation to nearby players!");
+        player.sendMessage(Component.text("Applied levitation to nearby players!", NamedTextColor.LIGHT_PURPLE));
     }
 
     /** Shoots shulker bullets at nearby enemies. */
@@ -62,13 +65,13 @@ public class ShulkerGem extends Gem {
 
         for (Entity entity : nearbyEntities) {
             if (bulletsShot < maxBullets) {
-                ShulkerBullet bullet = player.getWorld().spawn(
+                player.getWorld().spawn(
                     player.getEyeLocation().add(player.getEyeLocation().getDirection()),
-                    ShulkerBullet.class
-                );
-                bullet.setTarget(entity);
-                bullet.setShooter(player);
-                bulletsShot++;
+                    ShulkerBullet.class, bullet -> {
+                            bullet.setShooter(player);
+                            bullet.setTarget(entity);
+                        });
+                        bulletsShot++;
             }
         }
     }
@@ -113,21 +116,21 @@ public class ShulkerGem extends Gem {
             // Spawn particles at new location
             player.getWorld().spawnParticle(Particle.PORTAL, targetLocation, 20);
 
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Teleported");
+            player.sendMessage(Component.text("Teleported", NamedTextColor.LIGHT_PURPLE));
         } else {
-            player.sendMessage(ChatColor.RED + "Cannot teleport, unsafe location!");
+            player.sendMessage(Component.text("Cannot teleport, unsafe location!", NamedTextColor.RED));
         }
     }
 
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE + "Level %level%");
-        lore.add(ChatColor.LIGHT_PURPLE + "Abilities");
-        lore.add(ChatColor.WHITE + "Left click: Apply levitation to nearby players");
-        lore.add(ChatColor.WHITE + "Right click: Shoot shulker bullets");
-        lore.add(ChatColor.WHITE + "Shift click: Teleport forward");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Resistance");}
+        lore.add("§dLevel %level%");
+        lore.add("§dAbilities");
+        lore.add("§fLeft click: Apply levitation to nearby players");
+        lore.add("§fRight click: Shoot shulker bullets");
+        lore.add("§fShift click: Teleport forward");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Resistance");}
         return lore;
     }
 

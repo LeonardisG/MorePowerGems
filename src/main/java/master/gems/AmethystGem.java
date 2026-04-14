@@ -12,11 +12,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +26,6 @@ import java.util.List;
 import static dev.iseal.sealLib.SealLib.getPlugin;
 
 public class AmethystGem extends Gem {
-    public static final String TRAP_METADATA = "AMETHYST_TRAPPED";
     private static final int[][] CAGE_REL = buildCage();
 
     // Constructor
@@ -59,12 +60,12 @@ public class AmethystGem extends Gem {
         Player target = findTarget(caster, 12 + level * 2);
 
         if (target == null || target == caster) {
-            caster.sendMessage(ChatColor.DARK_PURPLE + "No target player in sight.");
+            caster.sendMessage(Component.text("No target player in sight.", NamedTextColor.DARK_PURPLE));
             return;
         }
 
-        if (target.hasMetadata(TRAP_METADATA)) {
-            caster.sendMessage(ChatColor.GRAY + "That player is already trapped.");
+        if (target.getPersistentDataContainer().has(Keys.AMETHYST_TRAP, PersistentDataType.BYTE)) {
+            caster.sendMessage(Component.text("That player is already trapped.", NamedTextColor.GRAY));
             return;
         }
 
@@ -173,9 +174,10 @@ public class AmethystGem extends Gem {
         world.spawnParticle(Particle.WITCH, target.getLocation().add(0, 1, 0), 25, 0.5, 0.7, 0.5, 0.05);
         world.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1f, 1.1f);
 
-        target.setMetadata(TRAP_METADATA, new FixedMetadataValue(getPlugin(), true));
-        caster.sendMessage(ChatColor.LIGHT_PURPLE + "Trapped " + target.getName() + " for " + durationSec + "s");
-        target.sendMessage(ChatColor.DARK_PURPLE + "You are trapped in amethyst! " + ChatColor.GRAY + "(Cannot kill you)");
+        target.getPersistentDataContainer().set(Keys.AMETHYST_TRAP, PersistentDataType.BYTE, (byte) 1);
+        caster.sendMessage(Component.text("Trapped " + target.getName() + " for " + durationSec + "s", NamedTextColor.LIGHT_PURPLE));
+        target.sendMessage(Component.text("You are trapped in amethyst! ", NamedTextColor.DARK_PURPLE)
+                .append(Component.text("(Cannot kill you)", NamedTextColor.GRAY)));
 
         // Start damage task
         startDamageTask(target, durationSec, damagePerSecond, replaced);
@@ -185,7 +187,7 @@ public class AmethystGem extends Gem {
             @Override
             public void run() {
                 restoreCage(replaced);
-                target.removeMetadata(TRAP_METADATA, getPlugin());
+                target.getPersistentDataContainer().remove(Keys.AMETHYST_TRAP);
             }
         }.runTaskLater(getPlugin(), durationTicks + 40L);
     }
@@ -264,7 +266,7 @@ public class AmethystGem extends Gem {
 
             void finish() {
                 restoreCage(replaced);
-                target.removeMetadata(TRAP_METADATA, getPlugin());
+                target.getPersistentDataContainer().remove(Keys.AMETHYST_TRAP);
                 cancel();
             }
         }.runTaskTimer(getPlugin(), 20L, 20L);
@@ -335,12 +337,12 @@ public class AmethystGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE + "Level %level%");
-        lore.add(ChatColor.LIGHT_PURPLE + "Abilities");
-        lore.add(ChatColor.WHITE + "Right Click: Throw an amethyst shard");
-        lore.add(ChatColor.WHITE + "Shift Click: Shines light on nearby players");
-        lore.add(ChatColor.WHITE + "Left Click: Traps a player in a purpur cage, dealing non-lethal damage");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Absorption");}
+        lore.add("§dLevel %level%");
+        lore.add("§dAbilities");
+        lore.add("§fRight Click: Throw an amethyst shard");
+        lore.add("§fShift Click: Shines light on nearby players");
+        lore.add("§fLeft Click: Traps a player in a purpur cage, dealing non-lethal damage");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Absorption");}
         return lore;
     }
 

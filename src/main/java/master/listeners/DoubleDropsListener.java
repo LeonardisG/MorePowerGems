@@ -1,5 +1,6 @@
 package master.listeners;
 
+import master.Keys;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,6 +10,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+
+import org.bukkit.persistence.PersistentDataType;
 
 import master.gems.AffluenceGem;
 
@@ -22,14 +25,15 @@ public class DoubleDropsListener implements Listener {
         if(e.isCancelled()) {
             return;
         }
-        if (e.getPlayer().hasMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY)) {
+        if (e.getPlayer().getPersistentDataContainer()
+                .has(Keys.AFFLUENCE_DOUBLE_DROPS, PersistentDataType.BYTE)) {
             Block block = e.getBlock(); //The original block
             Material blockType = block.getType(); //Its material type
             Location blockLocation = block.getLocation(); //Its location
 
             ItemStack tool = e.getPlayer().getInventory().getItemInMainHand();
             
-            if (tool != null && tool.getType() != Material.AIR && tool.hasItemMeta() && tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
+            if (tool.getType() != Material.AIR && tool.hasItemMeta() && tool.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH)) {
                 e.setDropItems(true);
                 return;
             }
@@ -76,7 +80,8 @@ public class DoubleDropsListener implements Listener {
      */
     @EventHandler
     public void killEvent(EntityDeathEvent e) {
-        if (e.getEntity().getKiller() != null && e.getEntity().getKiller().hasMetadata(AffluenceGem.DOUBLE_DROPS_METADATA_KEY)) {
+        if (e.getEntity().getKiller() != null && e.getEntity().getKiller().
+                getPersistentDataContainer().has(Keys.AFFLUENCE_DOUBLE_DROPS, PersistentDataType.BYTE)) {
             ItemStack[] drops = e.getDrops().toArray(new ItemStack[0]); // Get the original drops
             e.getDrops().clear(); // Clear the original drops
 

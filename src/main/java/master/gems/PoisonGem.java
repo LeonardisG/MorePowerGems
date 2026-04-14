@@ -2,7 +2,6 @@ package master.gems;
 
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.MPG;
-import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AbstractArrow;
@@ -18,6 +17,9 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 
 public class PoisonGem extends Gem {
@@ -104,19 +106,19 @@ public class PoisonGem extends Gem {
                 player.removePotionEffect(effectType);
             }
         }
-        player.sendMessage(ChatColor.DARK_GREEN + "Removed all negative potion effects!");
+        player.sendMessage(Component.text("Removed all negative potion effects!", NamedTextColor.DARK_GREEN));
     }
 
     /** Provides the default lore lines. */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add(ChatColor.DARK_GREEN + "Level %level%");
-        lore.add(ChatColor.DARK_GREEN + "Abilities");
-        lore.add(ChatColor.WHITE + "Right click: Shoot a tipped arrow with poison or instant damage.");
-        lore.add(ChatColor.WHITE + "Shift click: Remove all negative potion effects from yourself.");
-        lore.add(ChatColor.WHITE + "Left click: Apply regeneration to yourself and poison to players you look at.");
-        if(MPG.PassiveLoreEnabled) {lore.add(ChatColor.AQUA + "Passive: Regeneration");}
+        lore.add("§2Level %level%");
+        lore.add("§2Abilities");
+        lore.add("§fRight click: Shoot a tipped arrow with poison or instant damage.");
+        lore.add("§fShift click: Remove all negative potion effects from yourself.");
+        lore.add("§fLeft click: Apply regeneration to yourself and poison to players you look at.");
+        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
         return lore;
     }
 

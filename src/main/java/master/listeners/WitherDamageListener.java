@@ -1,12 +1,13 @@
 package master.listeners;
 
-import master.gems.WitherGem;
+import master.Keys;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.WitherSkull;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.persistence.PersistentDataType;
 
 public class WitherDamageListener implements Listener {
     /**
@@ -14,12 +15,12 @@ public class WitherDamageListener implements Listener {
      */
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent e) {
-        if(e.getEntity() instanceof Player plr && plr.hasMetadata(WitherGem.WITHER_DAMAGE_REDUCTION_KEY)) {
+        if(e.getEntity() instanceof Player plr && plr.getPersistentDataContainer().has(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE)) {
             double originalDamage = e.getDamage();
-            double reducedDamage = originalDamage * 0.5; // Reduce damage by 50%
-
+            double reducedDamage = originalDamage * 0.5;
             e.setDamage(reducedDamage);
-        }}
+        }
+    }
 
     /**
      * Cancels projectile damage for players with Wither Gem protection.
@@ -27,9 +28,9 @@ public class WitherDamageListener implements Listener {
     @EventHandler
     public void onProjectileDamage(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player plr &&
-                plr.hasMetadata(WitherGem.WITHER_DAMAGE_REDUCTION_KEY) &&
+                plr.getPersistentDataContainer().has(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE) &&
                 e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE) {
-            e.setCancelled(true); // Cancel the damage from projectiles
+            e.setCancelled(true);
         }
     }
 
@@ -38,10 +39,8 @@ public class WitherDamageListener implements Listener {
      */
     @EventHandler
     public void onWitherSkullDamage(EntityDamageByEntityEvent e) {
-        if(e.getDamager() instanceof WitherSkull skull && skull.hasMetadata(WitherGem.WITHER_SKULL_KEY)) {
-
-            int level = skull.getMetadata(WitherGem.WITHER_SKULL_LEVEL_KEY).getFirst().asInt();
-
+        if(e.getDamager() instanceof WitherSkull skull && skull.getPersistentDataContainer().has(Keys.WITHER_SKULL, PersistentDataType.BYTE)) {
+            int level = skull.getPersistentDataContainer().getOrDefault(Keys.WITHER_SKULL_LEVEL, PersistentDataType.INTEGER, 1);
             double originalDamage = e.getDamage();
             double buffedDamage = originalDamage + (3.0 * level);
             e.setDamage(buffedDamage);
