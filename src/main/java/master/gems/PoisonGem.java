@@ -113,12 +113,12 @@ public class PoisonGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§2Level %level%");
-        lore.add("§2Abilities");
-        lore.add("§fRight click: Shoot a tipped arrow with poison or instant damage.");
-        lore.add("§fShift click: Remove all negative potion effects from yourself.");
-        lore.add("§fLeft click: Apply regeneration to yourself and poison to players you look at.");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
+        lore.add("<dark_green>Level <level>");
+        lore.add("<dark_green>Abilities");
+        lore.add("<white>Right click: Shoot a tipped arrow with poison or instant damage.");
+        lore.add("<white>Shift click: Remove all negative potion effects from yourself.");
+        lore.add("<white>Left click: Apply regeneration to yourself and poison to players you look at.");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Regeneration");}
         return lore;
     }
 

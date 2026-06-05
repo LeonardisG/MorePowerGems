@@ -161,12 +161,12 @@ public class MechGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§4Level %level%");
-        lore.add("§4Abilities");
-        lore.add("§fRight Click: Create an explosion");
-        lore.add("§fLeft Click: Place temporary lava around you");
-        lore.add("§fShift Click: Create a protective magma box");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Fire Resistance");}
+        lore.add("<dark_red>Level <level>");
+        lore.add("<dark_red>Abilities");
+        lore.add("<white>Right Click: Create an explosion");
+        lore.add("<white>Left Click: Place temporary lava around you");
+        lore.add("<white>Shift Click: Create a protective magma box");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Fire Resistance");}
         return lore;
     }
 

@@ -337,12 +337,12 @@ public class AmethystGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§dLevel %level%");
-        lore.add("§dAbilities");
-        lore.add("§fRight Click: Throw an amethyst shard");
-        lore.add("§fShift Click: Shines light on nearby players");
-        lore.add("§fLeft Click: Traps a player in a purpur cage, dealing non-lethal damage");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Absorption");}
+        lore.add("<light_purple>Level <level>");
+        lore.add("<light_purple>Abilities");
+        lore.add("<white>Right Click: Throw an amethyst shard");
+        lore.add("<white>Shift Click: Shines light on nearby players");
+        lore.add("<white>Left Click: Traps a player in a purpur cage, dealing non-lethal damage");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Absorption");}
         return lore;
     }
 

@@ -74,12 +74,12 @@ public class BrezzeGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§bLevel %level%");
-        lore.add("§bAbilities");
-        lore.add("§fLeft-Click: Dash Forward");
-        lore.add("§fRight-Click: Launch Wind Charges");
-        lore.add("§fShift-Click: Summon Breezes");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: No fall damage");}
+        lore.add("<aqua>Level <level>");
+        lore.add("<aqua>Abilities");
+        lore.add("<white>Left-Click: Dash Forward");
+        lore.add("<white>Right-Click: Launch Wind Charges");
+        lore.add("<white>Shift-Click: Summon Breezes");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: No fall damage");}
         return lore;
     }
 

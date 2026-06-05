@@ -79,12 +79,12 @@ public class WitherGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§8Level %level%");
-        lore.add("§8Abilities");
-        lore.add("§fRight click: Reduce damage for 50% against all attacks, and 100% against projectiles");
-        lore.add("§fShift click: Create explosion and give everyone around you glowing effect");
-        lore.add("§fLeft click: Launch wither skulls at your target");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
+        lore.add("<dark_gray>Level <level>");
+        lore.add("<dark_gray>Abilities");
+        lore.add("<white>Right click: Reduce damage for 50% against all attacks, and 100% against projectiles");
+        lore.add("<white>Shift click: Create explosion and give everyone around you glowing effect");
+        lore.add("<white>Left click: Launch wither skulls at your target");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Regeneration");}
         return lore;
     }
 
