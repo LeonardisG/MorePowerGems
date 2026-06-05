@@ -100,12 +100,12 @@ public class MagicGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§cLevel %level%");
-        lore.add("§cAbilities");
-        lore.add("§fRight click: Summon Evoker Fangs");
-        lore.add("§fShift click: Spawn loyal Vexes");
-        lore.add("§fLeft click: Temporary flight");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Haste");}
+        lore.add("<red>Level <level>");
+        lore.add("<red>Abilities");
+        lore.add("<white>Right click: Summon Evoker Fangs");
+        lore.add("<white>Shift click: Spawn loyal Vexes");
+        lore.add("<white>Left click: Temporary flight");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Haste");}
         return lore;
     }
 

@@ -75,12 +75,12 @@ public class AffluenceGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§aLevel %level%");
-        lore.add("§aAbilities");
-        lore.add("§fRight click: Mine blocks faster");
-        lore.add("§fShift click: Halve all trade prices");
-        lore.add("§fLeft click: Double drop rates");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Hero of the Village");}
+        lore.add("<green>Level <level>");
+        lore.add("<green>Abilities");
+        lore.add("<white>Right click: Mine blocks faster");
+        lore.add("<white>Shift click: Halve all trade prices");
+        lore.add("<white>Left click: Double drop rates");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Hero of the Village");}
         return lore;
     }
 

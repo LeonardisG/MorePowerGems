@@ -6,7 +6,7 @@
 
     <groupId>dev.iseal</groupId>
     <artifactId>MorePowerGems</artifactId>
-    <version>2.5.4.3</version>
+    <version>2.5.5.0</version>
     <packaging>jar</packaging>
 
     <name>MorePowerGems</name>
@@ -77,7 +77,7 @@
         <dependency>
             <groupId>dev.iseal</groupId>
             <artifactId>PowerGems</artifactId>
-            <version>3.6.2.1</version>
+            <version>3.6.4.0</version>
             <scope>provided</scope>
         </dependency>
 

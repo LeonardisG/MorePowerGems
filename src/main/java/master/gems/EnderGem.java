@@ -132,12 +132,12 @@ public class EnderGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         return new ArrayList<>() {{
-            add("§5Level %level%");
-            add("§5Abilities");
-            add("§fRight click: Teleport to a random location nearby");
-            add("§fLeft click: Gain Speed II, Strength II, and Haste IV");
-            add("§fShift click: Summon dragon breath");
-            if(MPG.PassiveLoreEnabled) {add("§bPassive: Night vision");}
+            add("<dark_purple>Level <level>");
+            add("<dark_purple>Abilities");
+            add("<white>Right click: Teleport to a random location nearby");
+            add("<white>Left click: Gain Speed II, Strength II, and Haste IV");
+            add("<white>Shift click: Summon dragon breath");
+            if(MPG.PassiveLoreEnabled) {add("<aqua>Passive: Night vision");}
         }};
     }
 

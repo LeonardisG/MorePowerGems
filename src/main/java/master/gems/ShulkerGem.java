@@ -125,12 +125,12 @@ public class ShulkerGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§dLevel %level%");
-        lore.add("§dAbilities");
-        lore.add("§fLeft click: Apply levitation to nearby players");
-        lore.add("§fRight click: Shoot shulker bullets");
-        lore.add("§fShift click: Teleport forward");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Resistance");}
+        lore.add("<light_purple>Level <level>");
+        lore.add("<light_purple>Abilities");
+        lore.add("<white>Left click: Apply levitation to nearby players");
+        lore.add("<white>Right click: Shoot shulker bullets");
+        lore.add("<white>Shift click: Teleport forward");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Resistance");}
         return lore;
     }
 
