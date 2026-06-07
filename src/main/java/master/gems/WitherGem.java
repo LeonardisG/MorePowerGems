@@ -18,11 +18,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 
 public class WitherGem extends Gem {
+    private static final MiniMessage MM = MiniMessage.miniMessage();
 
     public WitherGem() {
         super("Wither");
@@ -54,14 +54,14 @@ public class WitherGem extends Gem {
     @Override
     protected void rightClick(Player player, int level) {
         player.getPersistentDataContainer().set(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE, (byte) 1);
-        player.sendMessage(Component.text("You are now immune to projectiles and take reduced damage for " +
-                (10 + (2 * Math.max(1, level))) + " seconds!", NamedTextColor.BLACK));
+        player.sendMessage(MM.deserialize("<black>You are now immune to projectiles and take reduced damage for " +
+                (10 + (2 * Math.max(1, level))) + " seconds!"));
         int durationTicks = (10 + (2 * Math.max(1, level))) * 20;
 
         Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
             if (player.getPersistentDataContainer().has(Keys.WITHER_DAMAGE_REDUCTION, PersistentDataType.BYTE)) {
                 player.getPersistentDataContainer().remove(Keys.WITHER_DAMAGE_REDUCTION);
-                player.sendMessage(Component.text("Your damage reduction has worn off.", NamedTextColor.BLACK));
+                player.sendMessage(MM.deserialize("<black>Your damage reduction has worn off."));
             }
         }, durationTicks);
     }
@@ -79,12 +79,12 @@ public class WitherGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§8Level %level%");
-        lore.add("§8Abilities");
-        lore.add("§fRight click: Reduce damage for 50% against all attacks, and 100% against projectiles");
-        lore.add("§fShift click: Create explosion and give everyone around you glowing effect");
-        lore.add("§fLeft click: Launch wither skulls at your target");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
+        lore.add("<gradient:#888888:#111111>Level <level></gradient>");
+        lore.add("<gradient:#888888:#111111>Abilities</gradient>");
+        lore.add("<white>Right click: Reduce damage for 50% against all attacks, and 100% against projectiles</white>");
+        lore.add("<white>Shift click: Create explosion and give everyone around you glowing effect</white>");
+        lore.add("<white>Left click: Launch wither skulls at your target</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Regeneration</aqua>");}
         return lore;
     }
 
@@ -95,7 +95,7 @@ public class WitherGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

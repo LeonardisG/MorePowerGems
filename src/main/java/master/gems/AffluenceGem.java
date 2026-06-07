@@ -3,6 +3,7 @@ package master.gems;
 import dev.iseal.powergems.misc.AbstractClasses.Gem;
 import master.Keys;
 import master.MPG;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
@@ -12,9 +13,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.ArrayList;
 
@@ -26,6 +24,8 @@ public class AffluenceGem extends Gem {
     public AffluenceGem() {
         super("Affluence");
     }
+
+    private static final MiniMessage MM = MiniMessage.miniMessage();
 
     @Override
     public void call(final Action act, final Player plr, final ItemStack item) {
@@ -42,8 +42,8 @@ public class AffluenceGem extends Gem {
                 player.getPersistentDataContainer().remove(Keys.AFFLUENCE_DOUBLE_DROPS);
             }
         }, 400L * level);
-        player.sendMessage(Component.text("Double drops activated for "
-                + (20 * level) + " seconds!", NamedTextColor.GREEN));
+        player.sendMessage(MM.deserialize("<green>Double drops activated for "
+                + (20 * level) + " seconds!"));
     }
 
     /** Grants a haste effect for faster mining. */
@@ -55,8 +55,8 @@ public class AffluenceGem extends Gem {
                 1,
                 true,
                 false));
-        player.sendMessage(Component.text("Haste activated for "
-                + (30 * level) + " seconds!", NamedTextColor.GREEN));
+        player.sendMessage(MM.deserialize("<green>Haste activated for "
+                + (30 * level) + " seconds!"));
     }
 
     /** Halves villager trade prices temporarily. */
@@ -68,19 +68,19 @@ public class AffluenceGem extends Gem {
                 player.getPersistentDataContainer().remove(Keys.AFFLUENCE_DISCOUNT);
             }
         }, 1200L * level);
-        player.sendMessage(Component.text("Trade prices halved for "
-                + (60 * level) + " seconds!", NamedTextColor.GREEN));
+        player.sendMessage(MM.deserialize("<green>Trade prices halved for "
+                + (60 * level) + " seconds!"));
     }
 
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§aLevel %level%");
-        lore.add("§aAbilities");
-        lore.add("§fRight click: Mine blocks faster");
-        lore.add("§fShift click: Halve all trade prices");
-        lore.add("§fLeft click: Double drop rates");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Hero of the Village");}
+        lore.add("<gradient:#AAFFAA:#00AA44>Level <level></gradient>");
+        lore.add("<gradient:#AAFFAA:#00AA44>Abilities</gradient>");
+        lore.add("<white>Right click: Mine blocks faster</white>");
+        lore.add("<white>Shift click: Halve all trade prices</white>");
+        lore.add("<white>Left click: Double drop rates</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Hero of the Village</aqua>");}
         return lore;
     }
 
@@ -91,7 +91,7 @@ public class AffluenceGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

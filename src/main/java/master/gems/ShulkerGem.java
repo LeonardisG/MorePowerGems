@@ -13,8 +13,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ import java.util.List;
 
 
 public class ShulkerGem extends Gem {
+    private static final MiniMessage MM = MiniMessage.miniMessage();
 
     public ShulkerGem() {
         super("Shulker");
@@ -51,7 +51,7 @@ public class ShulkerGem extends Gem {
             }
         }
 
-        player.sendMessage(Component.text("Applied levitation to nearby players!", NamedTextColor.LIGHT_PURPLE));
+        player.sendMessage(MM.deserialize("<light_purple>Applied levitation to nearby players!"));
     }
 
     /** Shoots shulker bullets at nearby enemies. */
@@ -116,21 +116,21 @@ public class ShulkerGem extends Gem {
             // Spawn particles at new location
             player.getWorld().spawnParticle(Particle.PORTAL, targetLocation, 20);
 
-            player.sendMessage(Component.text("Teleported", NamedTextColor.LIGHT_PURPLE));
+            player.sendMessage(MM.deserialize("<light_purple>Teleported"));
         } else {
-            player.sendMessage(Component.text("Cannot teleport, unsafe location!", NamedTextColor.RED));
+            player.sendMessage(MM.deserialize("<red>Cannot teleport, unsafe location!"));
         }
     }
 
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§dLevel %level%");
-        lore.add("§dAbilities");
-        lore.add("§fLeft click: Apply levitation to nearby players");
-        lore.add("§fRight click: Shoot shulker bullets");
-        lore.add("§fShift click: Teleport forward");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Resistance");}
+        lore.add("<gradient:#FF7FFF:#AA00AA>Level <level></gradient>");
+        lore.add("<gradient:#FF7FFF:#AA00AA>Abilities</gradient>");
+        lore.add("<white>Left click: Apply levitation to nearby players</white>");
+        lore.add("<white>Right click: Shoot shulker bullets</white>");
+        lore.add("<white>Shift click: Teleport forward</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Resistance</aqua>");}
         return lore;
     }
 
@@ -141,7 +141,7 @@ public class ShulkerGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

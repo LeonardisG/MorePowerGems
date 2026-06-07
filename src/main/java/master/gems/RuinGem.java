@@ -67,12 +67,12 @@ public class RuinGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§7Level %level%");
-        lore.add("§7Abilities");
-        lore.add("§fRight click: Transform surrounding blocks into moss.");
-        lore.add("§fShift click: Makes an infestation of silverfish that spread and infest blocks.");
-        lore.add("§fLeft click: Grapple to blocks in your line of sight.");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Jump boost.");}
+        lore.add("<gradient:#CCCCCC:#444444>Level <level></gradient>");
+        lore.add("<gradient:#CCCCCC:#444444>Abilities</gradient>");
+        lore.add("<white>Right click: Transform surrounding blocks into moss.</white>");
+        lore.add("<white>Shift click: Makes an infestation of silverfish that spread and infest blocks.</white>");
+        lore.add("<white>Left click: Grapple to blocks in your line of sight.</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Jump boost.</aqua>");}
         return lore;
     }
 
@@ -83,7 +83,7 @@ public class RuinGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

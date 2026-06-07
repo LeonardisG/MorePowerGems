@@ -17,8 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ import java.util.List;
 import static dev.iseal.sealLib.SealLib.getPlugin;
 
 public class AmethystGem extends Gem {
+    private static final MiniMessage MM = MiniMessage.miniMessage();
     private static final int[][] CAGE_REL = buildCage();
 
     // Constructor
@@ -60,12 +60,12 @@ public class AmethystGem extends Gem {
         Player target = findTarget(caster, 12 + level * 2);
 
         if (target == null || target == caster) {
-            caster.sendMessage(Component.text("No target player in sight.", NamedTextColor.DARK_PURPLE));
+            caster.sendMessage(MM.deserialize("<dark_purple>No target player in sight."));
             return;
         }
 
         if (target.getPersistentDataContainer().has(Keys.AMETHYST_TRAP, PersistentDataType.BYTE)) {
-            caster.sendMessage(Component.text("That player is already trapped.", NamedTextColor.GRAY));
+            caster.sendMessage(MM.deserialize("<gray>That player is already trapped."));
             return;
         }
 
@@ -175,9 +175,8 @@ public class AmethystGem extends Gem {
         world.playSound(target.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1f, 1.1f);
 
         target.getPersistentDataContainer().set(Keys.AMETHYST_TRAP, PersistentDataType.BYTE, (byte) 1);
-        caster.sendMessage(Component.text("Trapped " + target.getName() + " for " + durationSec + "s", NamedTextColor.LIGHT_PURPLE));
-        target.sendMessage(Component.text("You are trapped in amethyst! ", NamedTextColor.DARK_PURPLE)
-                .append(Component.text("(Cannot kill you)", NamedTextColor.GRAY)));
+        caster.sendMessage(MM.deserialize("<light_purple>Trapped " + target.getName() + " for " + durationSec + "s"));
+        target.sendMessage(MM.deserialize("<dark_purple>You are trapped in amethyst! <gray>(Cannot kill you)"));
 
         // Start damage task
         startDamageTask(target, durationSec, damagePerSecond, replaced);
@@ -337,12 +336,12 @@ public class AmethystGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§dLevel %level%");
-        lore.add("§dAbilities");
-        lore.add("§fRight Click: Throw an amethyst shard");
-        lore.add("§fShift Click: Shines light on nearby players");
-        lore.add("§fLeft Click: Traps a player in a purpur cage, dealing non-lethal damage");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Absorption");}
+        lore.add("<gradient:#F3C0FF:#9B30FF>Level <level></gradient>");
+        lore.add("<gradient:#F3C0FF:#9B30FF>Abilities</gradient>");
+        lore.add("<white>Right Click: Throw an amethyst shard</white>");
+        lore.add("<white>Shift Click: Shines light on nearby players</white>");
+        lore.add("<white>Left Click: Traps a player in a purpur cage, dealing non-lethal damage</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Absorption</aqua>");}
         return lore;
     }
 
@@ -353,7 +352,7 @@ public class AmethystGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

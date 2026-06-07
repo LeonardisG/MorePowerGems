@@ -2,8 +2,7 @@ package master.gems;
 
 import java.util.ArrayList;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,6 +21,7 @@ import master.MPG;
 
 
 public class EnderGem extends Gem {
+    private static final MiniMessage MM = MiniMessage.miniMessage();
     public EnderGem() {
         super("Ender");
     }
@@ -76,11 +76,11 @@ public class EnderGem extends Gem {
                 if (y < world.getMinHeight() || y > world.getMaxHeight()) continue;
 
                 player.teleport(feet);
-                player.sendMessage(Component.text("Teleported successfully!", NamedTextColor.DARK_PURPLE));
+                player.sendMessage(MM.deserialize("<dark_purple>Teleported successfully!"));
                 break;
             }
         } catch (Exception e) {
-            player.sendMessage(Component.text("Teleportation failed!", NamedTextColor.RED));
+            player.sendMessage(MM.deserialize("<red>Teleportation failed!"));
         }
     }
 
@@ -132,12 +132,12 @@ public class EnderGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         return new ArrayList<>() {{
-            add("§5Level %level%");
-            add("§5Abilities");
-            add("§fRight click: Teleport to a random location nearby");
-            add("§fLeft click: Gain Speed II, Strength II, and Haste IV");
-            add("§fShift click: Summon dragon breath");
-            if(MPG.PassiveLoreEnabled) {add("§bPassive: Night vision");}
+            add("<gradient:#B44FD8:#2D0052>Level <level></gradient>");
+            add("<gradient:#B44FD8:#2D0052>Abilities</gradient>");
+            add("<white>Right click: Teleport to a random location nearby</white>");
+            add("<white>Left click: Gain Speed II, Strength II, and Haste IV</white>");
+            add("<white>Shift click: Summon dragon breath</white>");
+            if(MPG.PassiveLoreEnabled) {add("<aqua>Passive: Night vision</aqua>");}
         }};
     }
 
@@ -148,7 +148,7 @@ public class EnderGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

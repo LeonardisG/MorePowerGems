@@ -100,12 +100,12 @@ public class MagicGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§cLevel %level%");
-        lore.add("§cAbilities");
-        lore.add("§fRight click: Summon Evoker Fangs");
-        lore.add("§fShift click: Spawn loyal Vexes");
-        lore.add("§fLeft click: Temporary flight");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Haste");}
+        lore.add("<gradient:#FF6688:#BB0033>Level <level></gradient>");
+        lore.add("<gradient:#FF6688:#BB0033>Abilities</gradient>");
+        lore.add("<white>Right click: Summon Evoker Fangs</white>");
+        lore.add("<white>Shift click: Spawn loyal Vexes</white>");
+        lore.add("<white>Left click: Temporary flight</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Haste</aqua>");}
         return lore;
     }
 
@@ -117,7 +117,7 @@ public class MagicGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 
 
 public class PoisonGem extends Gem {
+    private static final MiniMessage MM = MiniMessage.miniMessage();
     public PoisonGem() { super("Poison"); }
 
     @Override
@@ -106,19 +106,19 @@ public class PoisonGem extends Gem {
                 player.removePotionEffect(effectType);
             }
         }
-        player.sendMessage(Component.text("Removed all negative potion effects!", NamedTextColor.DARK_GREEN));
+        player.sendMessage(MM.deserialize("<dark_green>Removed all negative potion effects!"));
     }
 
     /** Provides the default lore lines. */
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§2Level %level%");
-        lore.add("§2Abilities");
-        lore.add("§fRight click: Shoot a tipped arrow with poison or instant damage.");
-        lore.add("§fShift click: Remove all negative potion effects from yourself.");
-        lore.add("§fLeft click: Apply regeneration to yourself and poison to players you look at.");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Regeneration");}
+        lore.add("<gradient:#55FF55:#005500>Level <level></gradient>");
+        lore.add("<gradient:#55FF55:#005500>Abilities</gradient>");
+        lore.add("<white>Right click: Shoot a tipped arrow with poison or instant damage.</white>");
+        lore.add("<white>Shift click: Remove all negative potion effects from yourself.</white>");
+        lore.add("<white>Left click: Apply regeneration to yourself and poison to players you look at.</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Regeneration</aqua>");}
         return lore;
     }
 
@@ -129,7 +129,7 @@ public class PoisonGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

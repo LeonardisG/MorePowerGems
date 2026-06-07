@@ -1,5 +1,5 @@
 name: MorePowerGems
-version: '2.5.4.3'
+version: '2.5.5.3'
 main: master.MPG
 api-version: '1.21'
 load: POSTWORLD

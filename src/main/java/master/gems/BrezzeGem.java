@@ -74,12 +74,12 @@ public class BrezzeGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§bLevel %level%");
-        lore.add("§bAbilities");
-        lore.add("§fLeft-Click: Dash Forward");
-        lore.add("§fRight-Click: Launch Wind Charges");
-        lore.add("§fShift-Click: Summon Breezes");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: No fall damage");}
+        lore.add("<gradient:#AAFFFF:#00AABB>Level <level></gradient>");
+        lore.add("<gradient:#AAFFFF:#00AABB>Abilities</gradient>");
+        lore.add("<white>Left-Click: Dash Forward</white>");
+        lore.add("<white>Right-Click: Launch Wind Charges</white>");
+        lore.add("<white>Shift-Click: Summon Breezes</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: No fall damage</aqua>");}
         return lore;
     }
 
@@ -90,7 +90,7 @@ public class BrezzeGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override

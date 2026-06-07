@@ -161,12 +161,12 @@ public class MechGem extends Gem {
     @Override
     public ArrayList<String> getDefaultLore() {
         ArrayList<String> lore = new ArrayList<>();
-        lore.add("§4Level %level%");
-        lore.add("§4Abilities");
-        lore.add("§fRight Click: Create an explosion");
-        lore.add("§fLeft Click: Place temporary lava around you");
-        lore.add("§fShift Click: Create a protective magma box");
-        if(MPG.PassiveLoreEnabled) {lore.add("§bPassive: Fire Resistance");}
+        lore.add("<gradient:#FF6644:#881100>Level <level></gradient>");
+        lore.add("<gradient:#FF6644:#881100>Abilities</gradient>");
+        lore.add("<white>Right Click: Create an explosion</white>");
+        lore.add("<white>Left Click: Place temporary lava around you</white>");
+        lore.add("<white>Shift Click: Create a protective magma box</white>");
+        if(MPG.PassiveLoreEnabled) {lore.add("<aqua>Passive: Fire Resistance</aqua>");}
         return lore;
     }
 
@@ -177,7 +177,7 @@ public class MechGem extends Gem {
 
     @Override
     public int getDefaultEffectLevel() {
-        return 1;
+        return 0;
     }
 
     @Override
