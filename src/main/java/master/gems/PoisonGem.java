@@ -1,7 +1,10 @@
 package master.gems;
 
-import dev.iseal.powergems.misc.AbstractClasses.Gem;
-import master.MPG;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
+import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.AbstractArrow;
@@ -14,10 +17,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
-
+import dev.iseal.powergems.misc.AbstractClasses.Gem;
+import master.MPG;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 
@@ -71,18 +72,52 @@ public class PoisonGem extends Gem {
     @Override
     protected void rightClick(Player player, int level) {
         boolean usePoison = ThreadLocalRandom.current().nextBoolean();
-        Arrow arrow = player.launchProjectile(Arrow.class);
-        arrow.setPersistent(true);
-        arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
-
         PotionEffect effect = usePoison ?
-            new PotionEffect(PotionEffectType.POISON, 100, 1, false, true) :
-            new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 1, false, true);
+                new PotionEffect(PotionEffectType.POISON, 100, 1, false, true) :
+                new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 1, false, true);
 
-        arrow.addCustomEffect(effect, true);
+        int ringArrows = Math.max(1, level);
+        double radius = 1.0 + (level * 0.2);
+        double convergeDistance = 12.0;
+        float speed = 1.5f + level * 0.1f;
 
-        // Scale velocity with gem level
-        arrow.setVelocity(arrow.getVelocity().multiply(1 + (level * 0.1)));
+        Location eye = player.getEyeLocation();
+        Vector baseDir = eye.getDirection().normalize();
+
+        // Orthonormal frame around the look direction. Looking straight up/down makes
+        // baseDir parallel to world up, so pick a different reference axis there.
+        Vector reference = Math.abs(baseDir.getY()) > 0.999 ? new Vector(1, 0, 0) : new Vector(0, 1, 0);
+        Vector right = baseDir.getCrossProduct(reference).normalize();
+        Vector up = right.getCrossProduct(baseDir).normalize();
+
+        // The ring arrows aim at this point instead of flying parallel, so the spread
+        // actually closes back onto the crosshair instead of passing either side of it.
+        Vector focus = eye.toVector().add(baseDir.clone().multiply(convergeDistance));
+
+        Arrow central = player.getWorld().spawnArrow(eye, baseDir, speed, 0f);
+        central.setShooter(player);
+        central.setPersistent(true);
+        central.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
+        central.addCustomEffect(effect, true);
+
+        for (int i = 0; i < ringArrows; i++) {
+            double angle = 2 * Math.PI * i / ringArrows;
+            Vector offset = right.clone().multiply(Math.cos(angle) * radius)
+                    .add(up.clone().multiply(Math.sin(angle) * radius));
+
+            Location spawn = eye.clone().add(offset);
+            // A ring position inside a wall would stick the arrow on spawn; fall back to the eye.
+            if (!spawn.getBlock().isPassable()) {
+                spawn = eye.clone();
+            }
+            Vector dir = focus.clone().subtract(spawn.toVector()).normalize();
+
+            Arrow arrow = player.getWorld().spawnArrow(spawn, dir, speed, 0f);
+            arrow.setShooter(player);
+            arrow.setPersistent(true);
+            arrow.setPickupStatus(AbstractArrow.PickupStatus.DISALLOWED);
+            arrow.addCustomEffect(effect, true);
+        }
     }
 
     /** Cleanses negative potion effects from self. */

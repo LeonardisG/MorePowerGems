@@ -1,22 +1,46 @@
 package master;
 
-import dev.iseal.powergems.api.ApiManager;
-import dev.iseal.sealLib.Updater.UpdateChecker;
-import master.gems.*;
-import master.listeners.*;
+import java.util.logging.Logger;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
+import dev.iseal.powergems.api.ApiManager;
+import dev.iseal.sealLib.Updater.UpdateChecker;
+import master.gems.AffluenceGem;
+import master.gems.AmethystGem;
+import master.gems.BrezzeGem;
+import master.gems.EnderGem;
+import master.gems.MagicGem;
+import master.gems.MechGem;
+import master.gems.PoisonGem;
+import master.gems.RuinGem;
+import master.gems.ShulkerGem;
+import master.gems.WitherGem;
+import master.listeners.AmethystThrowListener;
+import master.listeners.DoubleDropsListener;
+import master.listeners.FallListener;
+import master.listeners.PlayerLeaveEvent;
+import master.listeners.TradeListener;
+import master.listeners.VexListener;
+import master.listeners.WitherDamageListener;
 
 
 public final class MPG extends JavaPlugin {
     public static boolean PassiveLoreEnabled;
+    public static double AmethystShardBaseDamage;
+    public static double AmethystShardDamagePerLevel;
+    public static double AmethystShardMaxDamage;
     private TradeListener tradeListener;
 
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
+
         PassiveLoreEnabled = getConfig().getBoolean("passive-lore-enabled", true);
+        AmethystShardBaseDamage = getConfig().getDouble("amethyst.shard-damage.base", 6.0);
+        AmethystShardDamagePerLevel = getConfig().getDouble("amethyst.shard-damage.per-level", 2.0);
+        AmethystShardMaxDamage = getConfig().getDouble("amethyst.shard-damage.max", 20000.0);
         tradeListener = new TradeListener();
 
         Logger logger = getLogger();

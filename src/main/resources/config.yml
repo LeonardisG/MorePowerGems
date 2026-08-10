@@ -1,1 +1,9 @@
 passive-lore-enabled: true
+
+amethyst:
+  # Damage dealt by the thrown amethyst shard (right click).
+  # For reference, a player has 20 health points (10 hearts).
+  shard-damage:
+    base: 6.0        # damage at level 1
+    per-level: 2.0   # added for every level above 1
+    max: 20000.0     # hard ceiling; keeps absurd levels from producing infinite damage

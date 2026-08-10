@@ -148,7 +148,7 @@ public class AmethystGem extends Gem {
         return best;
     }
 
-    /** Traps a player in a purpur cage dealing non-lethal damage over time. */
+    /** Traps a player in a purpur cage dealing damage over time. */
     private void trapPlayer(Player caster, Player target, int level) {
         // Calculate duration: 10s base +2s per level
         int durationSec = 10 + Math.max(0, level - 1) * 2;
@@ -161,7 +161,7 @@ public class AmethystGem extends Gem {
             case 3 -> 5;
             case 4 -> 6;
             case 5 -> 7;
-            default -> 6;
+            default -> 1;
         };
         double damagePerSecond = hearts * 2.0 / durationSec;
 
