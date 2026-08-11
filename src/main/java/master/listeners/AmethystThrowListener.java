@@ -63,7 +63,6 @@ public class AmethystThrowListener implements Listener {
         if (Double.isNaN(damage)) {
             return MPG.AmethystShardBaseDamage;
         }
-        // Deliberately not Math.clamp: it throws if a config sets max below the floor.
         return Math.max(0.0, Math.min(damage, MPG.AmethystShardMaxDamage));
     }
 }
